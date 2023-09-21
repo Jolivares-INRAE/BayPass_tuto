@@ -1,0 +1,24 @@
+# bookdown::gitbook:
+#   css: css/style.css
+#   split_bib: false
+#   includes:
+#     in_header: preamble.tex
+#   latex_engine: xelatex
+#   citation_package: natbib
+#   keep_tex: yes
+
+bookdown::html_document2:
+  css: "style.css"
+  includes:
+    in_header: preamble.tex
+  latex_engine: xelatex
+  citation_package: natbib
+  keep_tex: yes
+
+# bookdown::pdf_document2: 
+#   css: style.css
+#   includes:
+#     in_header: preamble.tex
+#   latex_engine: xelatex
+#   citation_package: natbib
+#   keep_tex: yes

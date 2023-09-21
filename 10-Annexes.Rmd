@@ -1,0 +1,137 @@
+# Annexes {-}
+
+## Annexe 1 {-#An1}
+Il est possible de calculer des Fst multi-locus en balayant le génome avec une fenêtre glissante de SNP consécutifs et un chevauchement d'une demi fenêtre, une fois ploter, une région génomique très différenciée apparaîtra sous la forme d'une éruption de points colorés.
+
+### Fst en fenêtre glissante {-}
+```{r plot-sliding-Fst, verbose=FALSE, class.source='bg-chunk', class.output='bg-output'}
+#calcul des Fst avec une fenêtre glissante de 100 SNP consécutifs .
+Multi.Loc.fst <- computeFST(pooldata,
+                            method = "Anova",
+                            sliding.window.size = 100)
+#conversion en objet data frame
+df.fst<-as.data.frame(Multi.Loc.fst$sliding.windows.fst, h=T)
+#plot.
+Fst.plot = ggplot(data=df.fst, aes(x=CumulatedPosition/1e6, y=MultiLocusFst)) +
+  geom_point(aes(color=Chr), alpha=0.8, size=1.5) +
+  ggtitle("Fst en fenêtres glissantes") +
+  geom_hline(yintercept=Multi.Loc.fst$FST,lty=2) #le seuil indique la Fst globale estimée à l'échelle du génome
+Fst.plot + scale_x_continuous() +
+  scale_y_continuous() +
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+  facet_wrap(~Chr, scales = 'free_x', strip.position =c("bottom")) #affichage des chromosomes en grille
+```
+
+## Annexe 2 {-#An2}
+
+### Conversion de la matrice SVD en graphique ggplot {-}
+
+Il peut être intéressant de convertir la SVD en graphique ggplot, afin d'avoir la main sur tous les aspects cosmétiques en vue d'une publication par exemple.
+Le principe consiste à créer une table dans laquelle on intègre les informations à ploter (noms, phenotype, couleurs) ainsi que les les 2 premiers vecteurs propres (eigen vector) et leur variance, de la matrice SVD.
+```{r SVD, fig.width=8, fig.height=8, verbose=FALSE, eval=FALSE}
+# convertit en data.frame
+tab_SVD <- data.frame(sample.id = pnames,
+    #défini le phenotype de chaque population
+    phenotype = factor(c("Sensible",   "Sensible",  "Sensible", "Resistant", "Resistant", "Resistant")),
+    #attribut une couleur à chaque zone géographique
+    col_geo = factor(c("orange",   "darkgreen",  "blue", "orange", "darkgreen","blue")),
+    PC = SVD_omega$PC,    # the first eigenvector
+    eig = SVD_omega$eig,    # the second eigenvector
+    VAR = SVD_omega$pcent.var,    # variance de chaque eigenvector
+    stringsAsFactors = FALSE)
+
+ggplot_svd = ggplot(data=tab_SVD, aes(x=PC.1, y=PC.2, shape=phenotype, color= col_geo)) +
+  geom_point(alpha=1, size=5)+
+  scale_shape_manual(values = c('Sensible'=79, 'Resistant'=16))+
+  scale_colour_manual(name = "region",
+                      labels = c("sud", "nord", "est"),
+                      values = col_geo)+
+  ggtitle(paste0("Singular Value Decomposition of the covariance (",expression("\U03A9"),") matrix"))
+
+ggplot_svd +
+  scale_x_continuous()+
+  scale_y_continuous()+
+  xlab(paste("PC1 (",round(tab_SVD$VAR[1], 2), "%)" , sep=""))+
+  ylab(paste("PC2 (", round(tab_SVD$VAR[2], 2), "%)" , sep=""))+
+  geom_text(aes(label = sample.id), nudge_y = 0.05,fontface = 'bold')
+```
+
+## Annexe 3 {-#An3}
+
+### Concaténages des résultats Betai et contrastes {-}
+Valable pour le modèle standard pour Betai et pour les 3 modèles pour contraste.
+
+```{bash scr5A, eval=FALSE}
+
+Snpdet_path='/../BayPass/Input/'
+My_prefix='project_STD.sub'
+
+#on boucle sur toutes les covariables ou combinaisons de contraste
+for k in {1..3}
+do
+#on boucle sur tous les fichiers
+for i in {1..5}
+do
+file1=$(echo "$Snpdet_path/snpdet.sub""$i""")
+file2=$(echo "$My_prefix""$i""_summary_betai_reg.out")							#adapter le préfixe
+sed -e "s/[[:space:]]\+/ /g" $file1 > SubSNP.b									#on remplace tous les séparateurs par tabulation, ça évite les bugs
+sed -e "s/[[:space:]]\+/ /g" $file2 | awk -vK="$k" '{if($1 == K) {print}}' - > SubData.b				#on prend si col 1 (covariable) = k
+paste SubSNP.b SubData.b >> tmp-Cov$k.merged							#on colle/incrémente dans un nouveau fichier
+done
+#on tri par pos et on reconstruit l'entête
+awk '{for (i=1;i<=NF;i++) if ($i+0 == $i && $i ~ /e/) $2 = sprintf("%.0f", $i)} 1' tmp-Cov$k.merged | sort -k1,1 -k2,2n - > project_Betai.Cov$k		
+
+#on vire les fichiers tmp
+rm tmp-Cov$k.merged
+rm SubSNP.b
+rm SubData.b
+
+#entête pour les résultats Betai:
+sed -i '1i chr pos All1 All2 COVARIABLE MRK M_Pearson SD_Pearson M_Spearman SD_Spearman BF(dB) Beta_is SD_Beta_is eBPis' project_Betai.Cov$k 
+
+#entête pour les résultats de contraste:
+sed -i '1i chr pos All1 All2 CONTRAST MRK M_C2 SD_C2 C2_std C2_log10(1/pval)' project_contrast-C$k
+```
+
+## Annexe 4 {-#An4}
+
+### Création et analyse d'un jeu de données pseudo-observées (POD) {-}
+La fonction geno2YN extrait les données de comptages brutes en « Pseudo-Observed Data » (POD) et la fonction simulate.baypass génère un jeu de données simulées à partir de la matrice Ω déjà calculée (omegaB) ainsi qu'un constante Pi.beta que l'on récupère dans un des fichiers de sorties.
+```{r POD data, eval=FALSE}
+source("/../baypass_utils.R")
+#extrait les données de comptage
+POD.data=geno2YN(paste(path_input, "genobaypass", sep=""))
+#Extrait le beta pi moyen
+pi.betaK=read.table(paste0(path_out, "project.sub3_summary_beta_params.out"),h=T)$Mean
+#créé un jeu de données de 10 000 SNPs
+POD_BayPass<-simulate.baypass(omega.mat=omegaB,
+                              nsnp = 10000,
+                              beta.coef = NA,
+                              beta.pi = pi.betaK,
+                              sample.size=POD.data$NN,
+                              pi.maf=0, suffix="project.POD" )
+```
+Les 4 fichiers .POD générés (dans le dossier actif du pipeline) sont à copier sur le cluster de calcul. Le fichier G.project.POD sera analysé de la même manière que le jeu de données initial (contraste, ecotype…) sans qu'il soit nécéssaire de le subdiviser.
+
+###Analyse des résultats POD:
+Les fichiers résultats _*mat_omega_, _*summary_pi_xtx.out_, sont copiés tel quel en local, le fichier _*summary_contrast.out_, si il contient les résultats de plusieurs combinaison de contrastes, doit être subdivisé par combinaison au préalable et aussi copiées en local.
+La matrice Ω POD est comparée à la matrice Ω initialement calculée (omegaB) afin de valider la similarité des analyses. La fonction quantile calcule le seuil en fonction de la valeur probs qu’on lui donne : probs = 0,99 pour un seuil à 1%, probs=0,999 pour un seuil à 0,1% etc.
+Ces seuils seront utilisé comme seuil de significativité pour le jeu de données réel.
+
+```{r Thresholds, eval=FALSE}
+POD.omega=as.matrix(read.table(paste(path_POD, "project.POD_mat_omega.out", sep="")))
+plot(POD.omega,omegaB) ; abline(a=0,b=1)
+FMD.POD <- fmd.dist(POD.omega,omegaB)
+cat("Distance FMD =", FMD.POD, "\n")
+
+#Extrait la colonne des XtX et calcule un seuil correspondant au quantile que l'on souhaite
+POD.XtX=read.table(paste(path_POD, "project.POD_summary_pi_xtx.out", sep=""),h=T)$M_XtX
+thresh.XtX=quantile(POD.XtX,probs=0.99)
+cat("Seuil XtX =", thresh.XtX, "(Max=", max(POD.XtX) ,")", "\n")
+
+#Extrait la colonne des C2 et calcule un seuil correspondant au quantile que l'on souhaite
+POD.C2=read.table(paste(path_POD, "project.POD_summary_contrast.out", sep=""),h=T)$M_C2
+thresh.C2=quantile(POD.C2, probs=0.99)
+cat("Seuil de contraste C2 = ", thresh.C2, "(Max=", max(POD.C2) ,")", "\n")
+
+```

@@ -1,0 +1,14 @@
+.bg-linux {
+  background-color: black;
+  color: white;
+}
+
+.bg-chunk {
+  background-color: #e4f0fe;
+  border: 1px solid black;
+}
+
+.bg-output {
+  background-color: white;
+  border: 1px solid black;
+}

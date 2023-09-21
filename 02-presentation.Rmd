@@ -1,0 +1,189 @@
+# Présentation du logiciel BayPass 2.3  {-}
+Le logiciel BayPass est un logiciel de génomique des populations qui vise principalement à l'identification de marqueurs génétiques soumis à la sélection et/ou associés à des covariables spécifiques à la population (variables environnementales, phénotypiques, quantitatives, catégorielles…). Par une approche baysienne il évalue une **matrice Ω** de covariance des fréquences alléliques des populations résultant de leur histoire démographique.  Deux manières d’estimer ces fréquences alléliques sont disponibles soit en se basant sur les génotypes référence/mutant des individus analysés soit, lorsque l’on active le « pool-seq mode », ces fréquences alléliques sont calculées en regard de la profondeur de séquençage (reads count) et pondérées par le nombre d’individus qui ont contribué à cette profondeur. C’est cette seconde approche que nous considérerons dans cet ouvrage. 
+
+BayPass propose 3 modèles statistiques d’analyse :
+
+#### Le Core Model {-}
+C'est le modèle de base, il permet de calculer la matrice de covariance Ω et d’attribuer une statistique de différenciation **_XtX_** à chaque SNP, et ainsi de scanner le génome pour identifier les régions génomiques différenciées entre les populations.Le _XtX_ est défini comme la variance des fréquences alléliques standardisées du SNP dans les population, c'est une statistique analogue au Fst mais tient compte de la co-évolution des populations grace à la matrice Ω.
+
+
+#### Le Standard Model {-}
+Ce modèle, permet, l’orsque l’on fournit une ou plusieurs covariables (environnementales, phénotypiques…), de calculer un facteur de Bayes, ou Bayes factor en anglais, (BF) pour chaque marqueur génétique représentant la force d'association avec une covariable. C’est un modèle tout en un qui intègre le calcul des XtX et de la matrice Ω, il est adapté au faible nombre de population (< 15).
+
+#### L’Auxiliairy Model {-}
+Ce modèle a une approche différente dans le calcul de la statistique BF, sans entrer dans le détail il est plus adapté au grand nombre de population (> 15), En contrepartie il nécessite que l’on fournisse une matrice Ω déjà calculée par une analyse Core Model précédente, il recalcule alors les XtX et la statistique BF.
+
+Ces covariables évoquées doivent être distribuées en gradient entre les populations (différence de température, d’altitude…), en complément, dans le cas où la covariable étudiée serait purement qualitative ou binaire (sensible/résistant, gros/petit…), les modèles Standard et Auxiliaire peuvent calculer une statistique C2 qui évalue le contraste de différence des fréquences alléliques de chaque marqueur entre 2 groupes de populations. 
+
+## Présentation générale de l’analyse : {-}
+La Figure \@ref(fig:Fig1) est une vision simplifiée des différentes étapes nécessaire à l’analyses de données poolseq. Les étapes nécessittant une importante puissance de calcul comme le variant calling ou l'analyse BayPass se déroulent soit dans l’environnement Linux du cluster de calcul,  les étapes de filtrage, manipulation de données et de résultats se font sur ordinateur local sous Rstudio.
+La première étape part des fichiers d’alignement au format « **_bam_** » de chaque population à analyser et consiste à effectuer une recherche de variants (variant calling) pour obtenir un fichier au format « ***_vcf_** » regroupant tous les points de mutations ou SNP de toutes les populations qui sont autant de marqueurs génétiques à analyser. Ce fichier **_vcf_** sert d’entrée au package « PoolFstat » [@gautier_f-statistics_2022] qui va permettre de filtrer les SNPs à analyser et générer les fichiers nécessaires au bon fonctionnement de BayPass mais aussi de faire une première analyse des Fst entre populations par exemple. Ces fichiers d’entrées pouvant contenir plusieurs millions de SNP, ils sont découpés en plusieurs dizaines de sous jeux de données (sub sampling) afin de réduire les temps de calculs. Une fois que BayPass a analysé tous les sous jeux de données, l’homogénéité des résultats entre eux est analysée sous Rstudio puis les résultats peuvent être regroupés, filtrés et analysés afin de déterminer les marqueurs génétiques et les régions chromosomiques d’intérêts qui seront visualisées par différents plots.
+
+
+```{r Fig1, fig.cap="Pipeline d'analyse BayPass", echo=FALSE, fig.topcaption=TRUE, colorcaption='red'}
+knitr::include_graphics("C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/images/Analyse2.jpg")
+```
+<p style="font-family: calibri; font-size:11pt; font-style:italic">
+Le pipeline d’analyse est décomposé en plusieurs étapes se déroulant soit en environnement Linux pour celles nécessitant une importante capacité de calcul, soit sous Rstudio pour le filtrage et l’analyse des résultats.
+</p>
+
+# Données brutes {-}
+## Obtention d’un fichier Poolseq.vcf : {-}
+Les étapes de contrôle qualité et d’alignement des données de séquençage sont largement documentés par ailleurs, et ne serons donc pas documenter ici, et nous partirons directement des fichiers d’alignement **_bam_**. La première étape consiste à regrouper les fichiers **_bam_** de toutes les populations en un seul fichier puis à effectuer le variant calling avec un logiciel dédié compatible avec le séquençage en pool afin de conserver les informations de profondeur. Nous recommandons l’utilisation des Samtools [@li_sequence_2009] et de Varscan  2 [@koboldt_varscan_2012] avec une instruction pipe entre les deux pour éviter les fichiers intermédiaires et économiser l’espace de travail (Script \@ref(exm:script1)). Les commandes sont effectuées avec les paramètres de base, sauf la p-value qui est montée à 0.5 pour être le moins stringent possible à ce stade. On peut découper le travail en plusieurs chromosomes pour réduire les temps de calculs.
+
+
+```{example, script1}
+<span style="color:darkgreen">Exemple d'un script bash pour effectuer un variant calling</span>
+```
+<p style="font-family:calibri; font-size:11pt; font-style:italic; color:darkgreen">
+   Si l’on veut découper le travail en chromosomes, il est indispensable de travailler sur des fichiers bam correctement indexés et d’utiliser l’option -r/--region qui tire profit de cet index.
+</p>
+```{bash scr1, eval=FALSE, highlight=TRUE, class.source='bg-linux'}
+#!/bin/bash
+#SBATCH --array=1-29            #création de l'array: un élément/indice par chromosome
+
+module load bioinfo/samtools/1.12
+module load bioinfo/VarScan/2.4.2
+module load bioinfo/bcftools/1.14
+
+#liste tous les fichiers "bam" et leur chemin
+ls /../*.bam > BamList.txt
+#extrait les noms des échantillons/populations
+ls /../*.bam | sed -r 's/^.+\///' | sed -r 's/.bam//' > NameList.txt      
+
+samtools mpileup -C 50 -d 5000 -q 20 \
+-r chr${SLURM_ARRAY_TASK_ID} \    #attribut un chr à chaque indice de l'array : chr1, chr2 ...
+-f /../ref_genome.fas -b /../BamList.txt | \
+java -Xmx2G -jar $VARSCAN mpileup2cns \
+--variants --min-coverage 10 \
+--min-avg-qual 20 --min-var-freq 0.05 \
+--p-value 0.5 --output-vcf 1 \
+--vcf-sample-list NameList.txt > /../project_chr${SLURM_ARRAY_TASK_ID}.vcf
+
+bgzip /../project_chr${SLURM_ARRAY_TASK_ID}.vcf
+bcftools index /../project_chr${SLURM_ARRAY_TASK_ID}.vcf
+```
+
+A l'issue du variant calling les fichiers **_vcf_** des autosomes seront concaténés (Script \@ref(exm:script2)), les chromosomes sexuels ayant une ségrégation, une histoire démographique et une ploïdie différente des autosomes il conviendra, lorsque cela est possible, de les analyser à part.
+
+```{example, script2}
+<span style="color:darkgreen">Exemple d'un script bash pour concaténer des fichiers **_vcf_**</span>
+```
+<p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
+   On peut utiliser les bcftools pour concaténer les fichier **_vcf_**, la liste des fichiers à traiter est contenue dans une variable alimentée par une boucle "for".
+</p>
+```{bash scr2, eval=FALSE, class.source='bg-linux'}
+#!/bin/bash
+module load bioinfo/bcftools/1.14
+my_path='/../'
+
+# une boucle "for" itére sur les numéros des autosomes de 2 à 28
+# et ajoute chaque fichier vcf et son chemin dans une variable
+for ((i=2; i<=28; i++))
+do
+    files+=" $my_path/project_chr${i}.vcf.gz"  
+done
+
+# bcftools concatène la liste des vcf contenu dans la variable $file
+bcftools concat $files -O z -o $my_path/project_chr2-28.vcf.gz
+```
+## Filtrage des données brutes {-}
+
+Le fichier **_vcf_**, éventuellement compressé, est téléchargé sur un ordinateur local pour être analysé sous Rstudio. 
+Dans un premier temps il faut charger les packages nécessaires et définir les chemins des différents dossiers qui seront utilisés (Chunk \@ref(exr:chunk1))
+
+```{exercise, chunk1}
+<span style="color:darkgreen">Chargement des packages et chemins</span>
+```
+
+```{r load-Packages, message=FALSE, warning=FALSE, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
+library(poolfstat)      #filtrage du vcf et création des fichiers d'entrées BayPass
+library(RColorBrewer)   #gestion couleur des heatmaps
+library(mixOmics)       #"cim" pour heatmap
+library(corrplot)       #matrice de corrélation pour heat map
+library(VennDiagram)    #création de diagramme de Venn
+library(nVennR)         #extraction de données d'un diagramme de Venn
+library(tidyverse)      #manipulation de données (dplyr) et plots (ggplot2)
+
+#définition des chemins de travail
+path_vcf <- "/../vcf/"
+path_input <- "/../Input/"
+path_out <- "/../Output/"
+path_res <- "/../Resultats/"
+source("/../baypass_utils.R")   #fonctions utilitaires de BayPass
+```
+
+```{r work-space, echo=FALSE, verbose=FALSE, message=FALSE, warning=FALSE}
+library(poolfstat)      #filtrage du vcf et création des fichiers d'entrées BayPass
+library(RColorBrewer)   #gestion couleur des heatmaps
+library(mixOmics)       #"cim" pour heatmap
+library(corrplot)       #matrice de corrélation pour heat map
+library(VennDiagram)    #création de diagramme de Venn
+library(nVennR)         #extraction de données d'un diagramme de Venn
+library(tidyverse)      #manipulation de données (dplyr) et plots (ggplot2)
+source("C:/BayPass/utils/baypass_utils.R")
+source("C:/BayPass/utils/Fenetres_glissantes.R")
+path_vcf <- "C:/BayPass/vcf/"
+path_input <- "C:/BayPass/Input/"
+path_out <- "C:/BayPass/Output/"
+path_POD <- "C:/BayPass/POD/"
+path_res <- "C:/BayPass/Resultats/"
+```
+
+Le filtrage du **_vcf_** et la sélection des SNPs à analyser ce fait à l'aide du package PoolFstat (Chunk \@ref(exr:chunk2)). Dans un premier temps il faut renseigner les noms des populations dans un objet **_pnames_** et les tailles haploïdes de chaque population dans un objet **_psizes_**. Pour les organismes diploïdes, le nombre total de copies des autosomes sera deux fois le nombre d'individus dans le pool, pour les gonosomes Y ou W la ploïdie sera égale au nombre d'individus XY/ZW et pour les gonosomes X ou Z le calcul sera (nombre de XX/ZZ * 2) + (nombre de XY/ZW * 1). 
+La fonction **_vcf2poodata_** va balayer le fichier **_vcf_**, sélectionner les SNP bi-alléliques selon des critères définis par l'utilisateur et créer un objet **_pooldata_**.
+
+```{exercise, chunk2}
+<span style="color:darkgreen">Filtrage et sélection des SNPs</span>
+```
+<p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
+Les options à renseigner sont:<br>
+min.cov.per.pool = Si au moins un pool n'est pas couvert par au moins au moins min.cov.perpool reads, le SNP est rejeté.<br>
+max.cov.per.pool = Si au moins un pool est couvert par plus de que max.cov.perpool reads, le SNP est rejeté.<br>
+min.maf = fréquence allélique minimale autorisée pour l'allèle minoritaire pour qu'un SNP soit retenu.<br>
+</p>
+```{r conversion-pooldata, class.source='bg-chunk', class.output='bg-output'}
+#Infos sur les pops
+pnames <- c("pop1S", "pop2S", "pop3S", "pop1R", "pop2R", "pop3R")
+psizes_A <- c('114', '180', '160', '180', '200', '120')   #ploydie autosome
+psizes_X <- c('86', '135', '120', '135', '150', '90')     #ploydie X/Z
+psizes_Y <- c('28', '45', '40', '45', '50', '30')         #ploydie Y/W
+#conversion du .vcf
+pooldata <- vcf2pooldata(vcf.file = paste(path_vcf, "test_data.vcf.gz", sep=""),
+                         poolsizes = psizes_A,
+                         poolnames = pnames,
+                         min.cov.per.pool = 4,
+                         max.cov.per.pool = 1e+06,
+                         min.maf = 0.05,
+                         remove.indels = FALSE,
+                         nlines.per.readblock = 1e+06)
+#élimine le 1% supérieur considéré comme trop fortement couvert
+#(région très dupliquée, biais de séquençage...)
+pooldata<-pooldata.subset(pooldata, cov.qthres.per.pool = c(0,0.99))
+```
+```{r Fig2, echo=FALSE, eval=FALSE, out.extra = 'style="border:1px solid black;"'}
+knitr::include_graphics("C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/images/vcf2.jpg")
+```
+
+A ce stade cet objet **_pooldata_** peut être utilisé pour calculer diverses statistiques utilisées dans les études de génomique des populations, ces outils sont décrits et exemplifiés dans la vignette de **_poolfstat_** : (https://cran.r-project.org/web/packages/poolfstat/vignettes/vignette.pdf), parmis ceux-ci on trouve l'analyse des Fst entre les populations deux à deux (pairwise) afin de visualiser la proximité génétique entre populations(Chunk \@ref(exr:chunk3)).
+
+```{exercise, chunk3}
+<span style="color:darkgreen">Pairwise Fst</span>
+```
+```{r heatmap-PW-fst, fig.width=8, fig.height=8, verbose=FALSE, message=FALSE, warning=FALSE, class.source='bg-chunk', class.output='bg-output'}
+#Calcul des pairwise Fst 
+PairWise.fst <- compute.pairwiseFST(pooldata,
+                                    method = "Anova",
+                                    min.cov.per.pool = 4,
+                                    max.cov.per.pool = 1e+06,
+                                    min.maf = 0.05,
+                                    output.snp.values = FALSE,
+                                    verbose = FALSE)
+#conversion en matrice de distance
+df <- as.matrix(dist(t(PairWise.fst@PairwiseFSTmatrix)))
+#heatmap
+cim_color <- colorRampPalette(rev(brewer.pal(9, "Greens")))(9)
+cim(df, color = cim_color, symkey = FALSE, margins = c(10, 10),  title = "heatmap des pairwise Fst entre les populations")
+```
+
+un exemple d'estimation de la structure génétique des populations déduite des Fst est donné en [Annexe 1](#An1)

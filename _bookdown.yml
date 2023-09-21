@@ -1,0 +1,10 @@
+book_filename: "BayPass_Fr"
+css: "style.css"
+delete_merged_file: true
+language:
+  label:
+    fig: "Figure "
+    tab: "Table "
+    exm: "Script "
+    exr: "Chunk "
+    def: "Table "
