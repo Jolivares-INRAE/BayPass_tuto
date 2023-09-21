@@ -534,7 +534,7 @@ pooldata &lt;- vcf2pooldata(vcf.file = paste(path_vcf, &quot;test_data.vcf.gz&qu
 ## (N.B., positions with more than one alternate allele will be ignored)
 ## Parsing allele counts
 ## 1e+06  lines processed in 0 h  0 m  19 s : 577119 SNPs found
-## 1810324  lines processed in 0 h  0 m  33 s : 1066980 SNPs found
+## 1810324  lines processed in 0 h  0 m  32 s : 1066980 SNPs found
 ## Data consists of 1066980 SNPs for 6 Pools</code></pre>
 <pre class="r bg-chunk"><code>#élimine le 1% supérieur considéré comme trop fortement couvert
 #(région très dupliquée, biais de séquençage...)
@@ -553,7 +553,7 @@ PairWise.fst &lt;- compute.pairwiseFST(pooldata,
                                     output.snp.values = FALSE,
                                     verbose = FALSE)</code></pre>
 <pre class="bg-output"><code>## 
-## Overall Analysis Time: 0 h 0 m 6 s</code></pre>
+## Overall Analysis Time: 0 h 0 m 5 s</code></pre>
 <pre class="r bg-chunk"><code>#conversion en matrice de distance
 df &lt;- as.matrix(dist(t(PairWise.fst@PairwiseFSTmatrix)))
 #heatmap
