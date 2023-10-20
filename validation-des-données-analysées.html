@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Validation des données analysées | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Validation des données analysées | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://jolivares-inrae.github.io/BayPass_Tutorial/C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg" />
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="https://github.com/Jolivares-INRAE/BayPass_Tutorial" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Validation des données analysées | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="twitter:image" content="https://jolivares-inrae.github.io/BayPass_Tutorial/C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg" />
+
+<meta name="author" content="Jérôme OLIVARES" />
+
+
+<meta name="date" content="2023-10-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="baypass-les-résultats.html"/>
+<link rel="next" href="concaténation-des-résultats.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+\usepackage{booktabs}
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Résumé</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#mots-clefs"><i class="fa fa-check"></i>mots clefs</a></li>
+<li class="chapter" data-level="" data-path="prérequis.html"><a href="prérequis.html"><i class="fa fa-check"></i>prérequis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="" data-path="présentation-du-logiciel-baypass-2.html"><a href="présentation-du-logiciel-baypass-2.html"><i class="fa fa-check"></i>Présentation du logiciel BayPass 2.3</a>
+<ul>
+<li class="chapter" data-level="" data-path="présentation-générale-de-lanalyse.html"><a href="présentation-générale-de-lanalyse.html"><i class="fa fa-check"></i>Présentation générale de l’analyse :</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="données-brutes.html"><a href="données-brutes.html"><i class="fa fa-check"></i>Données brutes</a>
+<ul>
+<li class="chapter" data-level="" data-path="obtention-dun-fichier-poolseq.html"><a href="obtention-dun-fichier-poolseq.html"><i class="fa fa-check"></i>Obtention d’un fichier Poolseq.vcf :</a></li>
+<li class="chapter" data-level="" data-path="filtrage-des-données-brutes.html"><a href="filtrage-des-données-brutes.html"><i class="fa fa-check"></i>Filtrage des données brutes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"><a href="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"><i class="fa fa-check"></i>Conversion du pooldata en fichiers d’entrées pour BayPass</a>
+<ul>
+<li class="chapter" data-level="" data-path="design-de-lanalyse-baypass.html"><a href="design-de-lanalyse-baypass.html"><i class="fa fa-check"></i>Design de l’analyse BayPass</a></li>
+<li class="chapter" data-level="" data-path="subsampling.html"><a href="subsampling.html"><i class="fa fa-check"></i>Subsampling</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="baypass-lanalyse-poolseq.html"><a href="baypass-lanalyse-poolseq.html"><i class="fa fa-check"></i>Baypass : l’analyse poolseq</a></li>
+<li class="chapter" data-level="" data-path="baypass-les-résultats.html"><a href="baypass-les-résultats.html"><i class="fa fa-check"></i>Baypass : les résultats</a>
+<ul>
+<li class="chapter" data-level="" data-path="validation-des-données-analysées.html"><a href="validation-des-données-analysées.html"><i class="fa fa-check"></i>Validation des données analysées</a></li>
+<li class="chapter" data-level="" data-path="concaténation-des-résultats.html"><a href="concaténation-des-résultats.html"><i class="fa fa-check"></i>Concaténation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="exploitation-des-résultats.html"><a href="exploitation-des-résultats.html"><i class="fa fa-check"></i>Exploitation des résultats</a>
+<ul>
+<li class="chapter" data-level="" data-path="les-résultats-de-différentiation-xtx.html"><a href="les-résultats-de-différentiation-xtx.html"><i class="fa fa-check"></i>Les résultats de différentiation <em>XtX</em>:</a></li>
+<li class="chapter" data-level="" data-path="les-résultats-de-bayes-factor-bf.html"><a href="les-résultats-de-bayes-factor-bf.html"><i class="fa fa-check"></i>Les résultats de Bayes Factor <em>BF</em>:</a></li>
+<li class="chapter" data-level="" data-path="les-résultats-de-contraste-c2.html"><a href="les-résultats-de-contraste-c2.html"><i class="fa fa-check"></i>Les résultats de Contraste <em>C2</em>:</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="approche-par-fenêtres-glissantes.html"><a href="approche-par-fenêtres-glissantes.html"><i class="fa fa-check"></i>Approche par fenêtres glissantes</a></li>
+<li class="chapter" data-level="" data-path="annexes.html"><a href="annexes.html"><i class="fa fa-check"></i>Annexes</a>
+<ul>
+<li class="chapter" data-level="" data-path="An1.html"><a href="An1.html"><i class="fa fa-check"></i>Annexe 1</a>
+<ul>
+<li class="chapter" data-level="" data-path="An1.html"><a href="An1.html#fst-en-fenêtre-glissante"><i class="fa fa-check"></i>Fst en fenêtre glissante</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An2.html"><a href="An2.html"><i class="fa fa-check"></i>Annexe 2</a>
+<ul>
+<li class="chapter" data-level="" data-path="An2.html"><a href="An2.html#conversion-de-la-matrice-svd-en-graphique-ggplot"><i class="fa fa-check"></i>Conversion de la matrice SVD en graphique ggplot</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An3.html"><a href="An3.html"><i class="fa fa-check"></i>Annexe 3</a>
+<ul>
+<li class="chapter" data-level="" data-path="An3.html"><a href="An3.html#concaténages-des-résultats-betai-et-contrastes"><i class="fa fa-check"></i>Concaténages des résultats Betai et contrastes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An4.html"><a href="An4.html"><i class="fa fa-check"></i>Annexe 4</a>
+<ul>
+<li class="chapter" data-level="" data-path="An4.html"><a href="An4.html#création-et-analyse-dun-jeu-de-données-pseudo-observées-pod"><i class="fa fa-check"></i>Création et analyse d’un jeu de données pseudo-observées (POD)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="références.html"><a href="références.html"><i class="fa fa-check"></i>Références</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="validation-des-données-analysées" class="section level2 unnumbered hasAnchor">
+<h2>Validation des données analysées<a href="validation-des-données-analysées.html#validation-des-données-analysées" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Chaque sous jeu de données analysé va produire 8 fichiers de résultats avec des extensions différentes, un premier contrôle visuel utile est de vérifier que tous les fichiers partageant la même extension soient de taille identique en kilo ou méga-octets. Des différences manifestes sont signes de problèmes lors de l’analyse (crash, disque plein…) conduisant à des fichiers incomplets. Ceux qui vont focaliser notre attention en premier lieu sont les fichiers <strong><em>mat_omega.out</em></strong> qui contiennent la matrice Omega (Ω) de covariance des fréquences alléliques des populations qui est calculée à chaque analyse. Avant de regrouper les résultats, il faut s’assurer que chaque fichier du sous jeu de données a été analysé de la même manière que tous les autres, en comparant les matrices Ω entre elles.
+Cette comparaison se fait en évaluant un indice de distance FMD (Förstner &amp; Moonen, 2003) entre matrices ; plus la distance sera faible (idéalement inférieure à 1) plus les matrices, donc les analyses, seront comparables.(Chunk <a href="validation-des-données-analysées.html#exr:chunk5">5</a>)</p>
+<div class="exercise">
+<p><span id="exr:chunk5" class="exercise"><strong>Chunk 5  </strong></span><span style="color:darkgreen">Comparaison des matrices Ω</span></p>
+</div>
+<p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
+Les fichiers de matrice sont copiés dans un dossier local puis comparés deux à deux par la fonction <strong><em>fmd.dist</em></strong> des utilitaires de BayPass pour évaluer leur distances.<br>
+Une heatmap et une décomposition en valeurs singulières de la dernière matrice sont alors affichées.<br>
+</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb16-1"><a href="validation-des-données-analysées.html#cb16-1" tabindex="-1"></a>prefix <span class="ot">&lt;-</span> <span class="st">&quot;test_data.sub&quot;</span></span>
+<span id="cb16-2"><a href="validation-des-données-analysées.html#cb16-2" tabindex="-1"></a><span class="co">#liste et compte les matrices Ω du répertoire &quot;path_Omega&quot;</span></span>
+<span id="cb16-3"><a href="validation-des-données-analysées.html#cb16-3" tabindex="-1"></a>listMatrix <span class="ot">&lt;-</span> <span class="fu">list.files</span>(path_out, <span class="at">pattern=</span><span class="st">&quot;mat_omega.out&quot;</span>)</span>
+<span id="cb16-4"><a href="validation-des-données-analysées.html#cb16-4" tabindex="-1"></a>nMatrix<span class="ot">&lt;-</span><span class="fu">length</span>(listMatrix)</span>
+<span id="cb16-5"><a href="validation-des-données-analysées.html#cb16-5" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="validation-des-données-analysées.html#cb16-6" tabindex="-1"></a><span class="co">#boucle sur toutes les matrices, calcule les distances FMD en pairwise et stocke le résultat</span></span>
+<span id="cb16-7"><a href="validation-des-données-analysées.html#cb16-7" tabindex="-1"></a>ListFMD<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
+<span id="cb16-8"><a href="validation-des-données-analysées.html#cb16-8" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nMatrix) <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nMatrix) <span class="cf">if</span>(i<span class="sc">!=</span>j) {</span>
+<span id="cb16-9"><a href="validation-des-données-analysées.html#cb16-9" tabindex="-1"></a>omegaA<span class="ot">=</span><span class="fu">as.matrix</span>(<span class="fu">read.table</span>(<span class="fu">paste0</span>(path_out, prefix, i,<span class="st">&quot;_mat_omega.out&quot;</span>)))</span>
+<span id="cb16-10"><a href="validation-des-données-analysées.html#cb16-10" tabindex="-1"></a>omegaB<span class="ot">=</span><span class="fu">as.matrix</span>(<span class="fu">read.table</span>(<span class="fu">paste0</span>(path_out, prefix, j,<span class="st">&quot;_mat_omega.out&quot;</span>)))</span>
+<span id="cb16-11"><a href="validation-des-données-analysées.html#cb16-11" tabindex="-1"></a>FMD <span class="ot">&lt;-</span> <span class="fu">fmd.dist</span>(omegaA, omegaB)</span>
+<span id="cb16-12"><a href="validation-des-données-analysées.html#cb16-12" tabindex="-1"></a>ListFMD <span class="ot">&lt;-</span> <span class="fu">c</span>(ListFMD,FMD)</span>
+<span id="cb16-13"><a href="validation-des-données-analysées.html#cb16-13" tabindex="-1"></a>}</span>
+<span id="cb16-14"><a href="validation-des-données-analysées.html#cb16-14" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="validation-des-données-analysées.html#cb16-15" tabindex="-1"></a><span class="co">#heatmap de la dernière matrice Ω.</span></span>
+<span id="cb16-16"><a href="validation-des-données-analysées.html#cb16-16" tabindex="-1"></a><span class="fu">colnames</span>(omegaB) <span class="ot">&lt;-</span><span class="fu">c</span>(pnames)</span>
+<span id="cb16-17"><a href="validation-des-données-analysées.html#cb16-17" tabindex="-1"></a><span class="fu">rownames</span>(omegaB) <span class="ot">&lt;-</span><span class="fu">c</span>(pnames)</span>
+<span id="cb16-18"><a href="validation-des-données-analysées.html#cb16-18" tabindex="-1"></a>cor.mat<span class="ot">=</span><span class="fu">cov2cor</span>(omegaB)</span>
+<span id="cb16-19"><a href="validation-des-données-analysées.html#cb16-19" tabindex="-1"></a><span class="co">#heatmap des liens génétiques entre population</span></span>
+<span id="cb16-20"><a href="validation-des-données-analysées.html#cb16-20" tabindex="-1"></a>cim_color <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">9</span>, <span class="st">&quot;Blues&quot;</span>)))(<span class="dv">16</span>)</span>
+<span id="cb16-21"><a href="validation-des-données-analysées.html#cb16-21" tabindex="-1"></a><span class="fu">cim</span>(cor.mat, <span class="at">color =</span> cim_color, <span class="at">symkey =</span> <span class="cn">FALSE</span>, <span class="at">margins =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">10</span>), <span class="at">title =</span> <span class="st">&quot;Correlation map based on last &quot;</span><span class="sc">~</span><span class="fu">hat</span>(Omega))</span></code></pre></div>
+<p><img src="BayPass_Fr_files/figure-html/validation-matrice-omega-1.png" width="768" /></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb17-1"><a href="validation-des-données-analysées.html#cb17-1" tabindex="-1"></a><span class="co">#SVD de la dernière matrice Ω.</span></span>
+<span id="cb17-2"><a href="validation-des-données-analysées.html#cb17-2" tabindex="-1"></a>SVD_omega<span class="ot">&lt;-</span><span class="fu">plot.omega</span>(<span class="at">omega=</span>omegaB, <span class="at">pop.names=</span>pnames, <span class="at">main =</span> <span class="fu">expression</span>(<span class="st">&quot;Singular Value Decomposition of last &quot;</span> <span class="sc">*</span> <span class="er">~</span><span class="fu">hat</span>(Omega)), <span class="at">pos=</span><span class="dv">3</span>)</span></code></pre></div>
+<p><img src="BayPass_Fr_files/figure-html/validation-matrice-omega-2.png" width="768" /></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb18-1"><a href="validation-des-données-analysées.html#cb18-1" tabindex="-1"></a><span class="co">#calcule la moyenne et la sd de toutes les distances FMD</span></span>
+<span id="cb18-2"><a href="validation-des-données-analysées.html#cb18-2" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;FMD mean =&quot;</span>, <span class="fu">mean</span>(ListFMD), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre class="bg-output"><code>## FMD mean = 0.1796614</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb20-1"><a href="validation-des-données-analysées.html#cb20-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;FMD sd =&quot;</span> , <span class="fu">sd</span>(ListFMD), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre class="bg-output"><code>## FMD sd = 0.05272404</code></pre>
+<p>Une fois la moyenne des FMD calculées il est possible de visualiser les liens génétiques entre populations représentés par la matrice Ω par un plot en heatmap ainsi que par la décomposition en valeurs singulières (SVD) d’une matrice prise au hasard.Un exemple de script pour convertir une SVD en plot ggplot2 beaucoup plus maniable et paramétrable pour une publication par exemple est donné en <a href="An2.html#An2">Annexe 2</a>
+Cette matrice SVD représente les distances génétiques des populations analysées.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="baypass-les-résultats.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="concaténation-des-résultats.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

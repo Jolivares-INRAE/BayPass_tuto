@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Concaténation des résultats | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Concaténation des résultats | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://jolivares-inrae.github.io/BayPass_Tutorial/C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg" />
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="https://github.com/Jolivares-INRAE/BayPass_Tutorial" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Concaténation des résultats | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="twitter:image" content="https://jolivares-inrae.github.io/BayPass_Tutorial/C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg" />
+
+<meta name="author" content="Jérôme OLIVARES" />
+
+
+<meta name="date" content="2023-10-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="validation-des-données-analysées.html"/>
+<link rel="next" href="exploitation-des-résultats.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+\usepackage{booktabs}
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Résumé</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#mots-clefs"><i class="fa fa-check"></i>mots clefs</a></li>
+<li class="chapter" data-level="" data-path="prérequis.html"><a href="prérequis.html"><i class="fa fa-check"></i>prérequis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="" data-path="présentation-du-logiciel-baypass-2.html"><a href="présentation-du-logiciel-baypass-2.html"><i class="fa fa-check"></i>Présentation du logiciel BayPass 2.3</a>
+<ul>
+<li class="chapter" data-level="" data-path="présentation-générale-de-lanalyse.html"><a href="présentation-générale-de-lanalyse.html"><i class="fa fa-check"></i>Présentation générale de l’analyse :</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="données-brutes.html"><a href="données-brutes.html"><i class="fa fa-check"></i>Données brutes</a>
+<ul>
+<li class="chapter" data-level="" data-path="obtention-dun-fichier-poolseq.html"><a href="obtention-dun-fichier-poolseq.html"><i class="fa fa-check"></i>Obtention d’un fichier Poolseq.vcf :</a></li>
+<li class="chapter" data-level="" data-path="filtrage-des-données-brutes.html"><a href="filtrage-des-données-brutes.html"><i class="fa fa-check"></i>Filtrage des données brutes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"><a href="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"><i class="fa fa-check"></i>Conversion du pooldata en fichiers d’entrées pour BayPass</a>
+<ul>
+<li class="chapter" data-level="" data-path="design-de-lanalyse-baypass.html"><a href="design-de-lanalyse-baypass.html"><i class="fa fa-check"></i>Design de l’analyse BayPass</a></li>
+<li class="chapter" data-level="" data-path="subsampling.html"><a href="subsampling.html"><i class="fa fa-check"></i>Subsampling</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="baypass-lanalyse-poolseq.html"><a href="baypass-lanalyse-poolseq.html"><i class="fa fa-check"></i>Baypass : l’analyse poolseq</a></li>
+<li class="chapter" data-level="" data-path="baypass-les-résultats.html"><a href="baypass-les-résultats.html"><i class="fa fa-check"></i>Baypass : les résultats</a>
+<ul>
+<li class="chapter" data-level="" data-path="validation-des-données-analysées.html"><a href="validation-des-données-analysées.html"><i class="fa fa-check"></i>Validation des données analysées</a></li>
+<li class="chapter" data-level="" data-path="concaténation-des-résultats.html"><a href="concaténation-des-résultats.html"><i class="fa fa-check"></i>Concaténation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="exploitation-des-résultats.html"><a href="exploitation-des-résultats.html"><i class="fa fa-check"></i>Exploitation des résultats</a>
+<ul>
+<li class="chapter" data-level="" data-path="les-résultats-de-différentiation-xtx.html"><a href="les-résultats-de-différentiation-xtx.html"><i class="fa fa-check"></i>Les résultats de différentiation <em>XtX</em>:</a></li>
+<li class="chapter" data-level="" data-path="les-résultats-de-bayes-factor-bf.html"><a href="les-résultats-de-bayes-factor-bf.html"><i class="fa fa-check"></i>Les résultats de Bayes Factor <em>BF</em>:</a></li>
+<li class="chapter" data-level="" data-path="les-résultats-de-contraste-c2.html"><a href="les-résultats-de-contraste-c2.html"><i class="fa fa-check"></i>Les résultats de Contraste <em>C2</em>:</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="approche-par-fenêtres-glissantes.html"><a href="approche-par-fenêtres-glissantes.html"><i class="fa fa-check"></i>Approche par fenêtres glissantes</a></li>
+<li class="chapter" data-level="" data-path="annexes.html"><a href="annexes.html"><i class="fa fa-check"></i>Annexes</a>
+<ul>
+<li class="chapter" data-level="" data-path="An1.html"><a href="An1.html"><i class="fa fa-check"></i>Annexe 1</a>
+<ul>
+<li class="chapter" data-level="" data-path="An1.html"><a href="An1.html#fst-en-fenêtre-glissante"><i class="fa fa-check"></i>Fst en fenêtre glissante</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An2.html"><a href="An2.html"><i class="fa fa-check"></i>Annexe 2</a>
+<ul>
+<li class="chapter" data-level="" data-path="An2.html"><a href="An2.html#conversion-de-la-matrice-svd-en-graphique-ggplot"><i class="fa fa-check"></i>Conversion de la matrice SVD en graphique ggplot</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An3.html"><a href="An3.html"><i class="fa fa-check"></i>Annexe 3</a>
+<ul>
+<li class="chapter" data-level="" data-path="An3.html"><a href="An3.html#concaténages-des-résultats-betai-et-contrastes"><i class="fa fa-check"></i>Concaténages des résultats Betai et contrastes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An4.html"><a href="An4.html"><i class="fa fa-check"></i>Annexe 4</a>
+<ul>
+<li class="chapter" data-level="" data-path="An4.html"><a href="An4.html#création-et-analyse-dun-jeu-de-données-pseudo-observées-pod"><i class="fa fa-check"></i>Création et analyse d’un jeu de données pseudo-observées (POD)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="références.html"><a href="références.html"><i class="fa fa-check"></i>Références</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="concaténation-des-résultats" class="section level2 unnumbered hasAnchor">
+<h2>Concaténation des résultats<a href="concaténation-des-résultats.html#concaténation-des-résultats" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Une fois la reproductibilité des analyses vérifiées, il faut concaténer tous les fichiers de résultats, l’idée étant de faire le lien entre chaque fichier de résultat et son fichier de position <strong><em>snpdet.sub</em></strong> correspondant puis de les concaténer les uns aux autres. Les fichiers avec l’extension <strong><em>summary_pi_xtx.out</em></strong> contiennent les resultats liés à la statistique de differenciation <strong><em>XtX</em></strong>, le script (Script <a href="concaténation-des-résultats.html#exm:script5">5</a>) est un exemple de script bash adapté à ce type de fichier.</p>
+<div class="example">
+<p><span id="exm:script5" class="example"><strong>Script 5  </strong></span><span style="color:darkgreen">Exemple d’un script bash pour concaténer les résultats <em>XtX</em>.</span></p>
+</div>
+<p style="font-family:calibri; font-size:11pt; font-style:italic; color:darkgreen">
+Un boucle permet de coller chaque fichier résultat à son fichier snpdet correspondant(même numéro de subset “i”), le fichier obtenu est trié et l’entête reconstruite.
+</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash bg-linux"><code class="sourceCode bash"><span id="cb22-1"><a href="concaténation-des-résultats.html#cb22-1" tabindex="-1"></a></span>
+<span id="cb22-2"><a href="concaténation-des-résultats.html#cb22-2" tabindex="-1"></a><span class="va">Snpdet_path</span><span class="op">=</span><span class="st">&#39;/../BayPass/Input/&#39;</span></span>
+<span id="cb22-3"><a href="concaténation-des-résultats.html#cb22-3" tabindex="-1"></a><span class="va">My_prefix</span><span class="op">=</span><span class="st">&#39;project_STD.sub&#39;</span></span>
+<span id="cb22-4"><a href="concaténation-des-résultats.html#cb22-4" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="concaténation-des-résultats.html#cb22-5" tabindex="-1"></a><span class="co">#on boucle sur tous les sous fichiers</span></span>
+<span id="cb22-6"><a href="concaténation-des-résultats.html#cb22-6" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="dt">{</span><span class="dv">1</span><span class="dt">..</span><span class="dv">5</span><span class="dt">}</span></span>
+<span id="cb22-7"><a href="concaténation-des-résultats.html#cb22-7" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb22-8"><a href="concaténation-des-résultats.html#cb22-8" tabindex="-1"></a><span class="va">file1</span><span class="op">=</span><span class="va">$(</span><span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$Snpdet_path</span><span class="st">/snpdet.sub&quot;&quot;</span><span class="va">$i</span><span class="st">&quot;&quot;&quot;</span><span class="va">)</span></span>
+<span id="cb22-9"><a href="concaténation-des-résultats.html#cb22-9" tabindex="-1"></a><span class="va">file2</span><span class="op">=</span><span class="va">$(</span><span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$My_prefix</span><span class="st">&quot;&quot;</span><span class="va">$i</span><span class="st">&quot;&quot;_summary_pi_xtx.out&quot;</span><span class="va">)</span></span>
+<span id="cb22-10"><a href="concaténation-des-résultats.html#cb22-10" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-e</span> <span class="st">&quot;s/[[:space:]]\+/ /g&quot;</span> <span class="va">$file1</span> <span class="op">&gt;</span> SubSNP.x                          <span class="co">#on remplace tous les séparateurs par tabulation, ça évite les bugs</span></span>
+<span id="cb22-11"><a href="concaténation-des-résultats.html#cb22-11" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-e</span> <span class="st">&quot;s/[[:space:]]\+/ /g&quot;</span> <span class="va">$file2</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> <span class="st">&quot;MRK&quot;</span> <span class="at">-</span> <span class="op">&gt;</span> SubData.x                   <span class="co">#on prend tout sauf l&#39;entête</span></span>
+<span id="cb22-12"><a href="concaténation-des-résultats.html#cb22-12" tabindex="-1"></a><span class="fu">paste</span> SubSNP.x SubData.x <span class="at">-</span> <span class="op">&gt;&gt;</span> tmp.xtx.merged                        <span class="co">#on colle/incrémente dans un nouveau fichier</span></span>
+<span id="cb22-13"><a href="concaténation-des-résultats.html#cb22-13" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb22-14"><a href="concaténation-des-résultats.html#cb22-14" tabindex="-1"></a><span class="co">#on tri par chromosome et position</span></span>
+<span id="cb22-15"><a href="concaténation-des-résultats.html#cb22-15" tabindex="-1"></a><span class="fu">awk</span> <span class="st">&#39;{for (i=1;i&lt;=NF;i++) if ($i+0 == $i &amp;&amp; $i ~ /e/) $2 = sprintf(&quot;%.0f&quot;, $i)} 1&#39;</span> tmp.xtx.merged <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-k1,1</span> <span class="at">-k2,2n</span> <span class="at">-</span> <span class="op">&gt;</span> 8pops_M-chr1-Core.xtx     </span>
+<span id="cb22-16"><a href="concaténation-des-résultats.html#cb22-16" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="concaténation-des-résultats.html#cb22-17" tabindex="-1"></a><span class="co">#on supprime les fichiers temporaire</span></span>
+<span id="cb22-18"><a href="concaténation-des-résultats.html#cb22-18" tabindex="-1"></a><span class="fu">rm</span> tmp.xtx.merged</span>
+<span id="cb22-19"><a href="concaténation-des-résultats.html#cb22-19" tabindex="-1"></a><span class="fu">rm</span> SubSNP.x</span>
+<span id="cb22-20"><a href="concaténation-des-résultats.html#cb22-20" tabindex="-1"></a><span class="fu">rm</span> SubData.x</span>
+<span id="cb22-21"><a href="concaténation-des-résultats.html#cb22-21" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="concaténation-des-résultats.html#cb22-22" tabindex="-1"></a><span class="co">#on insère l&#39;entête du fichier</span></span>
+<span id="cb22-23"><a href="concaténation-des-résultats.html#cb22-23" tabindex="-1"></a><span class="fu">sed</span> <span class="at">-i</span> <span class="st">&#39;1i chr pos All1 All2 MRK M_P SD_P M_XtX SD_XtX XtXst log10(1/pval)&#39;</span> 8pops_M-chr1-Core.xtx</span></code></pre></div>
+<p>Les fichiers avec l’extension **__summary_betai_reg.out_** contiennent les résultats liés aux Bayes Factor, ceux avec l’extension **__summary_contrast.out_** contiennent les résultats liés à la statistique de contraste C2.
+Le script pour concaténer ces résultats est très similaire, une boucle est rajouté pour répéter l’opération autant de fois qu’il y a de covariables ou de combinaisons de contraste analysés, un exemple de script est disponible en <a href="An3.html#An3">Annexe 3</a>.</p>
+
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="validation-des-données-analysées.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="exploitation-des-résultats.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
