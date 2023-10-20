@@ -1,2 +1,126 @@
 # Approche par fenêtres glissantes {-}
 
+Dans l'approche par fenêtre glissante, une fenêtre de longueur spécifiée se déplace sur les données, en se décalant d'un pas défini. A chaque glissement le nombre de données contenu dans la fenêtre est calculé. La fonction _Fenetres_glissantes.R_ permet de faire ce calcul (Chunk \@ref(exr:chunk11)), à partir d'une table contenant au minimum les colonnes _chr_ et _pos_, en sortie, le nombre de valeurs contenues dans chaque fenêtre est reporté dans une colonne _nValues_ et la position de chaque fenêtre est définie par les colonnes _Start_ et _End_. Ce type de représentation permet de visualiser les régions génomiques qui sont concentrées en SNP sélectionnés sur la base d'une statistique d'intérêt. Cette approche est particulièrement intéressante quand les signatures de sélections sont faibles.
+
+```{exercise, chunk11}
+<span style="color:darkgreen">Visualisation par fenêtres glissantes.</span>
+```
+<p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
+Deux paramètres sont à renseigner: la taille de la fenêtre et le pas de glissement.<br>
+Une fois la fonction exécutée le résultat peut être visualisé par un plot (pos, nValues) de chaque chromosome<br>
+</p>
+```{r plot_slide_BF, class.source='bg-chunk', class.output='bg-output'}
+#travail sur le top 1% des XtX.
+df<-subset(Full.res, M_XtX > quantile(Full.res$M_XtX, probs=0.99 ))
+slide_x <- sliding_window_counts(df, window_size = 50000, step_size = 5000)
+
+#plot de la concentration du top 1% des XtX
+Manplot.SX = ggplot(data=slide_x, aes(x=Start, y=nValues)) +
+  geom_point(aes(color=chr), alpha=0.8, size=1.5) +
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+Manplot.SX + ggtitle("Plot du nombre de XtX dans le top 1% par fenêtres de 50Kb")+
+  facet_wrap(~chr, scales = 'free_x', strip.position = c("bottom"))
+
+#travail sur les Bayes Factors >= 15
+df<-subset(Full.res, BF.dB. >= 15)
+slide_bf <- sliding_window_counts(df, window_size = 50000, step_size = 5000)
+
+#plot de la concentration en BF >= 15
+Manplot.SBF = ggplot(data=slide_bf, aes(x=Start, y=nValues)) +
+  geom_point(aes(color=chr), alpha=0.8, size=1.5) +
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+Manplot.SBF + ggtitle("Plot du nombre de Bayes Factors >= 15 par fenêtres de 50Kb")+
+  facet_wrap(~chr, scales = 'free_x', strip.position = c("bottom"))
+
+#travail sur le top 1% des contrastes
+df<-subset(Full.res, M_C2 > quantile(Full.res$M_C2, probs=0.99 ))
+slide_C2 <- sliding_window_counts(df, window_size = 50000, step_size = 5000)
+
+#plot de la concentration du top 1% des C2
+Manplot.SC2 = ggplot(data=slide_C2, aes(x=Start, y=nValues)) +
+  geom_point(aes(color=chr), alpha=0.8, size=1.5) +
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+Manplot.SC2 + ggtitle("Plot du nombre de contraste C2 dans le top 1% par fenêtres de 50Kb")+
+  facet_wrap(~chr, scales = 'free_x', strip.position = c("bottom"))
+```
+
+
+Dans l'exemple précédent les fenêtres glissantes permettent de mettre en évidence 
+
+#Comparaison par diagramme de Venn:
+```{r Listes, class.source='bg-chunk', class.output='bg-output'}
+#Filtrage selon conditions
+Datmp1 = subset(Full.res, M_XtX > quantile(Full.res$M_XtX, probs=0.99 ))
+Datmp2 = subset(Full.res, BF.dB.>= 15)
+Datmp3 = subset(Full.res, log10.1.pval. >quantile(Full.res$log10.1.pval., probs=0.99))
+
+#Conversion en liste au format "chr1_pos1, chr1_pos2, chr1_pos3, ...", 
+List.SNP1<-paste(Datmp1[,1], "_", Datmp1[,2], sep="")
+List.SNP2<-paste(Datmp2[,1], "_", Datmp2[,2], sep="")
+List.SNP3<-paste(Datmp3[,1], "_", Datmp3[,2], sep="")
+```
+
+
+```{r venn, class.source='bg-chunk', class.output='bg-output'}
+#Diagramme de Venn
+v.list=list("BF >=15" = List.SNP2, "XtX (top1%)" = List.SNP1, "log10.1.pval. (top 1%)" = List.SNP3)
+vd0 <- venn.diagram(v.list, fill = c("lightgreen", "pink","lightblue"), cat.col = c("darkgreen", "red", "blue"), fontface = "bold", filename = NULL)
+grid.newpage()
+grid.draw(vd0)
+
+v.table<-get.venn.partitions(v.list, keep.elements = TRUE, hierarchical = TRUE)%>% #extrait les tables des intersects
+  select("..set..", "..values..") %>% #ne garde que les colonnes set (nom de l'intersect) et values (liste des éléments de l'intersect)
+  spread(key = "..set..", value = "..values..")%>% #réorganiser les données en 2 colonnes distinctes 
+  rename_all(~ gsub("∩", " & ", gsub("∖.*$", "", .)))%>%  #remplace le symbole "∩", par " & " et supprime tout ce qui est après "∖"
+  pivot_longer(cols = everything(), names_to = "intersect") %>%  #transpose/pivote les colonnes
+  unnest(cols = value)%>%
+  separate(value, into = c("chr", "pos"), sep = "_", extra = "merge")%>%
+  mutate_at(c(3), as.numeric)
+
+
+cat("Les noms et les effectifs des intersects du diagramme de Venn sont :",
+    "\n", paste0(names(table(v.table$intersect)),
+                 " n=", table(v.table$intersect)), sep = "\n")
+
+
+# # créé une table avec  une colonne par intersect et les items en dessous
+# test<-get.venn.partitions(v.list, keep.elements = TRUE, hierarchical = TRUE)%>% #extrait les tables des intersects
+#   select("..set..", "..values..") %>% #ne garde que les colonnes set (nom de l'intersect) et values (liste des éléments de l'intersect)
+#   spread(key = "..set..", value = "..values..")%>% #réorganiser les données en 2 colonnes distinctes
+#   rename_all(~ gsub("∩", " & ", .))%>%  #remplace le symbole "∩", par " & " dans les noms d'intersects
+#   rename_all(~ gsub("∖.*$", "", .))%>%
+#   pivot_longer(cols = everything(), names_to = "intersect") %>%  #transpose/pivote les colonnes
+#   unnest(cols = value)%>% #déploie les éléments de la colonne values
+#   group_by(intersect) %>%  #groupe les données par la colonne "name"
+#   mutate(row_id = row_number()) %>% #ajoute une nouvelle colonne "row_id" qui contient le numéro de ligne de chaque groupe.
+#   pivot_wider(names_from = intersect, values_from = value) %>% #remet les données avec les valeurs de chaque groupe "name" dans des colonnes séparées
+#   select(-row_id)
+
+#write.table(test, row.names = FALSE, file=paste(path_res, "venn.txt", sep=""), quote = FALSE, sep = "\t")
+```
+#Convertir les liste de SNP dans un intersecte en fichier bed
+```{r plot-Venn, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
+#subset en fonction de l'intersecte que l'on veut
+sub.venn<-v.table%>%
+  filter(intersect == "BF >=15 & XtX (top1%) & log10.1.pval. (top 1%)")%>%
+  left_join(Full.res, by = c("chr", "pos")) %>%
+  select(chr,pos,M_XtX,BF.dB.)
+
+#plot de la concentration du top 1% des C2
+Manplot.venn = ggplot(data=sub.venn, aes(x=pos, y=BF.dB.)) +
+  geom_point(aes(color=chr), alpha=0.8, size=1.5) +
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+Manplot.venn + ggtitle("Plot du nombre de contraste C2 dans le top 1% par fenêtres de 50Kb")+
+  facet_wrap(~chr, scales = 'free_x', strip.position = c("bottom"))
+
+#Conversion de la table en fichier .bed
+sub.bed<-v.table%>%
+  filter(intersect == "BF >=15 & XtX (top1%) & log10.1.pval. (top 1%)")%>%
+  mutate(Start = pos - 1) %>%
+  select(chr, Start, pos)%>%
+  rename(End = pos)
+#write.table(sub.bed, file=paste0(path_res, "Intersect_SNP.bed", sep=""), quote = FALSE, sep = "\t", row.names = FALSE)
+```
+
+
+

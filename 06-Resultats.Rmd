@@ -1,22 +1,40 @@
 # Exploitation des résultats {-}
 
 Une fois fois regroupés les résultats sont téléchargés sur un ordinateur local, la visualisation et les analyses complémentaires sont effectuées sous Rstudio.
+La première étape (Chunk \@ref(exr:chunk6)) consiste à regrouper les résultats dans une seule table.
+
+```{exercise, chunk6}
+<span style="color:darkgreen">Regroupement des résultats</span>
+```
+<p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
+Les 3 fichiers sont importer et fusionnés, dans le cas où des chromosomes sexuels auraient été analysés<br>
+à part il faudra les ajouter aussi<br>
+</p>
+```{r regroupement, class.source='bg-chunk', class.output='bg-output'}
+XtX.res=read.table(paste0(path_out,"test_data.XtX"),h=T)
+BF.res.cov1=read.table(paste0(path_out,"test_data.Cov1"),h=T)
+C2.res.C1=read.table(paste0(path_out,"test_data.contrast-C1"),h=T)
+
+Full.res<-XtX.res %>%
+  left_join(BF.res.cov1, by=c("chr","pos"))%>%
+  left_join(C2.res.C1, by=c("chr","pos"))
+
+```
 
 ## Les résultats de différentiation _XtX_: {-}
 Les colonnes **_M_P_** et **_SD_P_** correspondent, pour simplifier et pour chaque SNP, à la moyenne de la fréquence de l'allèle référence dans toutes les populations analysées et sa standard déviation. A noter que les fichiers avec les extensions **_yij_pij.out_** contiennent le détail de ces fréquences alléliques corrigées de l'allèle référence pour chacune des populations analysées.
 La colonne **_M_xtx_** correspond aux valeurs de la statistique _XtX_, la colonne **_XtXst_** est une version recalibrée du _XtX_ et **_log10(1/pval)_** sa p.value.
 Il est à noté qu'une valeur faible de _XtX_ associée à un _log10(1/pval)_ élevé est signe de sélection balancée, une valeur élevé de _XtX_ et de _log10(1/pval)_ est un signe de sélection positive.
 
-Une dernière vérification consiste à vérifier la distribution des p.values associées aux _XtXst_ avec le script (Chunk \@ref(exr:chunk6))
+Une dernière vérification consiste à vérifier la distribution des p.values associées aux _XtXst_ avec le script (Chunk \@ref(exr:chunk7))
 
-```{exercise, chunk6}
+```{exercise, chunk7}
 <span style="color:darkgreen">Distribution des p.values</span>
 ```
 <p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
 L'histogramme de la colonne _log10(1/pval)_ du fichier de résultat permet d'avoir une idée immédiate de la distribution normale ou non des p.values de l'analyse.<br>
 </p>
-```{r Distribution-XtX, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
-XtX.res=read.table(paste0(path_out,"project.XtX"),h=T)
+```{r Distribution-XtX, class.source='bg-chunk', class.output='bg-output'}
 hist(10**(-1*XtX.res$log10.1.pval.),freq=F,breaks=50)
 abline(h=1)
 ```
@@ -24,118 +42,69 @@ Une explication de comment interpréter cet histogramme de distribution est disp
 http://varianceexplained.org/statistics/interpreting-pvalue-histogram/
 Si cette distribution n’est pas normale il est souhaitable de calibrer les  résultats avec un jeu de données simulées POD (voir [Annexe 4](#An4)) afin de définir des seuils de significativités fiables.
 
-Un Manhattan plot simple des valeurs de _XtX_ permet de visualiser les régions génomiques différentiées des populations analysées (Chunk \@ref(exr:chunk7)).
+Un Manhattan plot simple des valeurs de _XtX_ permet de visualiser les régions génomiques différentiées des populations analysées (Chunk \@ref(exr:chunk8)).
 Les valeurs de XtX les plus élevés indiquent une différentiation significative entre les populations, parmi ces SNP ceux qui ont une valeur _log10(1/pval)_ élevée indique une signature de sélection positive. A l'inverse, des valeurs de _log10(1/pval)_ élevées associées à des XtX faibles sont plutôt signe d'une sélection balancée.
 
-```{exercise, chunk7}
+```{exercise, chunk8}
 <span style="color:darkgreen">Exploitation des XtX</span>
 ```
 <p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
 Les valeurs de _XtX_ sont contenues dans la colonne **_M_XtX_**<br>
 L'affichage des chromosomes peut se faire en grille (facet_wrap) ou en ligne (facet_grid).<br>
 </p>
-```{r plot_XtX, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
-Manplot.XtX = ggplot(data=XtX.res, aes(x=pos, y=M_XtX)) +
+```{r plot_XtX, class.source='bg-chunk', class.output='bg-output'}
+Manplot.XtX = ggplot(data=Full.res, aes(x=pos, y=M_XtX)) +
   geom_point(aes(color=chr), alpha=0.8, size=0.25) +
-  ggtitle("Plot XtX versus position")
-Manplot.XtX + scale_x_continuous() +
-  scale_y_continuous() +
-  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())+
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+Manplot.XtX + ggtitle("Plot simple XtX versus position (facet wrap)")+
   facet_wrap(~chr, scales = 'free_x', strip.position = c("bottom"))
-  #facet_grid(~chr,scales = 'free_x', space = 'free_x', switch = 'x')
 ```
+
+Dans l'exemple précédent on peut voir plusieurs régions génomiques fortement différenciées en particulier au milieu du chromosome 3.
 
 ## Les résultats de Bayes Factor _BF_: {-}
 
 Les valeurs de Bayes Factors représentent la corrélation des fréquences alléliques des SNP au travers des populations avec la covariable écologique associée.
 Ces valeurs sont logarithmiques et exprimés en decibel (dB), les valeurs comprises entre 15 et 20 db constituant une "preuve très forte" et les valeurs >20 db constituant une "preuve décisive" en faveur de l'association avec la covariable selon la règle de Jeffrey [@jeffreys_theory_1998].
-Un Manhattan plot simple des valeurs de _BF_ permet de visualiser les SNPs et les régions génomiques fortement associés à la covariable analysée (Chunk \@ref(exr:chunk8)).
+Un Manhattan plot simple des valeurs de _BF_ permet de visualiser les SNPs et les régions génomiques fortement associés à la covariable analysée (Chunk \@ref(exr:chunk9)).
 
-```{exercise, chunk8}
+```{exercise, chunk9}
 <span style="color:darkgreen">Exploitation des Bayes Factors</span>
 ```
 <p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
 Les valeurs de Bayes Factors sont contenues dans la colonne **_BF.dB._**<br>
 L'affichage des chromosomes peut se faire en grille (facet_wrap) ou en ligne (facet_grid).<br>
 </p>
-```{r plot_BF, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
-#import results
-BF.res=read.table(paste0(path_out,"project.Cov1"),h=T)
-#plot
-Manplot.BF = ggplot(data=BF.res, aes(x=pos, y=BF.dB.)) +
+```{r plot_BF, class.source='bg-chunk', class.output='bg-output'}
+#plot simple
+Manplot.BF = ggplot(data=Full.res, aes(x=pos, y=BF.dB.)) +
   geom_point(aes(color=chr), alpha=0.8, size=0.25) +
-  ggtitle("Plot Bayes Factors versus position")
-Manplot.BF + scale_x_continuous() +
-  scale_y_continuous() +
-  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())+
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+Manplot.BF + ggtitle("Plot Bayes Factors versus position")+
   facet_wrap(~chr, scales = 'free_x', strip.position = c("bottom"))
-  #facet_grid(~chr,scales = 'free_x', space = 'free_x', switch = 'x')
 ```
 
 ## Les résultats de Contraste _C2_: {-}
 
 Les valeurs de contrastes représentent la différence des fréquences alléliques des SNP entre 2 groupes de populations caractérisées par une variable binaire, sensible versus résistant par exemple.
-Un Manhattan plot simple des valeurs de la colonne _M_C2_ permet de visualiser les SNPs et les régions génomiques fortement contrastées (Chunk \@ref(exr:chunk9)).
+Un Manhattan plot simple des valeurs de la colonne _M_C2_ permet de visualiser les SNPs et les régions génomiques fortement contrastées (Chunk \@ref(exr:chunk10)).
 
-```{exercise, chunk9}
+```{exercise, chunk10}
 <span style="color:darkgreen">Exploitation des contrastes</span>
 ```
 <p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
 Les valeurs de contraste sont contenues dans la colonne **_M_C2_**<br>
 L'affichage des chromosomes peut se faire en grille (facet_wrap) ou en ligne (facet_grid).<br>
 </p>
-```{r plot_C2, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
-#import results
-C2.res=read.table(paste0(path_out,"project.Contrast1"),h=T)
+```{r plot_C2, class.source='bg-chunk', class.output='bg-output'}
 #plot
-Manplot.BF = ggplot(data=C2.res, aes(x=pos, y=M_C2)) +
+Manplot.C2 = ggplot(data=Full.res, aes(x=pos, y=M_C2)) +
   geom_point(aes(color=chr), alpha=0.8, size=0.25) +
-  ggtitle("Plot contrast values versus position")
-Manplot.BF + scale_x_continuous() +
-  scale_y_continuous() +
-  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())+
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+Manplot.C2 +
+  ggtitle("Plot contrast values versus position")+
   facet_wrap(~chr, scales = 'free_x', strip.position = c("bottom"))
-  #facet_grid(~chr,scales = 'free_x', space = 'free_x', switch = 'x')
-```
-
-#Comparaison par diagramme de Venn:
-```{r Listes, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
-#Filtrage selon conditions
-thresh.BF2<-c(10)
-Datmp1 = subset(Joined.res1, M_XtX> thresh.XtX )
-Datmp2 = subset(Joined.res1, M_C2>thresh.C2)
-Datmp3 = subset(Joined.res1, BF.dB.>thresh.BF2)
-
-#Conversion en liste au format "chr1_pos1, chr1_pos2, chr1_pos3, ...", 
-List.SNP1<-paste(Datmp1[,1], "_", Datmp1[,2], sep="")
-List.SNP2<-paste(Datmp2[,1], "_", Datmp2[,2], sep="")
-List.SNP3<-paste(Datmp3[,1], "_", Datmp3[,2], sep="")
-
 ```
 
 
-```{r venn, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
-#Diagramme de Venn
-#cat.col = c("darkgreen", "black", "darkblue")
-vd0 <- venn.diagram(x=list("XtX top1%" = List.SNP1, "C2 top 1%" = List.SNP2, "BF >50" = List.SNP3), fill = c("blue", "green", "red"), cat.col = c("blue", "green", "red"), cat.cex = 1.5, fontface = "bold", filename = NULL)
-grid.newpage()
-grid.draw(vd0)
-
-```
-
-#Extraire les listes de chaque intersecte du diagramme:
-```{r List-Venn, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
-myV <- plotVenn(list("XtX_BF1" = List.SNP3, "XtX_BF2" = List.SNP4))
-myV <- plyr::ldply(listVennRegions(myV), cbind)
-write.table(myV, file=paste(path_res, "Seed2001_Overlap_XtX_BF.txt", sep=""), quote = FALSE, sep = "\t", row.names = FALSE)
-#récupère la liste des intersectes
-myV %>% distinct(myV[,1])
-```
-#Convertir les liste de SNP dans un intersecte en fichier bed
-```{r Bed-Venn, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
-#subset en fonction de l'intersecte que l'on veut
-tmp<-subset(myV,myV[,1] == "1, 1, 1 (Contraste01, Contraste02, Contraste03)")
-V.tmp<-separate(plyr::ldply(paste(tmp[,2]), cbind), col = "1",  sep = "_", into = c("chr", "pos"))
-V.bed <- plyr::ldply(paste(V.tmp[,1], as.numeric(V.tmp[,2])-1, V.tmp[,2]), cbind)
-V.bed<-mutate(separate(V.bed, col = "1",  sep = " ", into = c("chr", "start", "end")))
-write.table(V.bed, file=paste(path_res, "overlap_3_contrastes.bed", sep=""), quote = FALSE, sep = "\t", row.names = FALSE)

@@ -11,27 +11,20 @@ Les fichiers de matrice sont copiés dans un dossier local puis comparés deux �
 Une heatmap et une décomposition en valeurs singulières de la  dernière matrice sont alors affichées.<br>
 </p>
 
-```{r validation-matrice-omega, fig.width=24, fig.height=18, eval=FALSE, class.source='bg-chunk', class.output='bg-output'}
-source("/../baypass_utils.R")
-prefix <- "project.sub"
+```{r validation-matrice-omega, fig.width=8, fig.height=8, , verbose=FALSE, message=FALSE, warning=FALSE, class.source='bg-chunk', class.output='bg-output'}
+prefix <- "test_data.sub"
 #liste et compte les matrices Ω du répertoire "path_Omega"
-path_Omega <- "/../Omega_files/"
-listMatrix <- list.files(path_Omega, pattern="mat_omega.out")
+listMatrix <- list.files(path_out, pattern="mat_omega.out")
 nMatrix<-length(listMatrix)
-cat("Nbr matrix files =", nMatrix, "\n")
 
 #boucle sur toutes les matrices, calcule les distances FMD en pairwise et stocke le résultat
 ListFMD<-c()
 for (i in 1:nMatrix) for (j in 1:nMatrix) if(i!=j) {
-omegaA=as.matrix(read.table(paste(path_Omega, prefix, i,"_mat_omega.out", sep="")))
-omegaB=as.matrix(read.table(paste(path_Omega, prefix, j,"_mat_omega.out", sep="")))
+omegaA=as.matrix(read.table(paste0(path_out, prefix, i,"_mat_omega.out")))
+omegaB=as.matrix(read.table(paste0(path_out, prefix, j,"_mat_omega.out")))
 FMD <- fmd.dist(omegaA, omegaB)
 ListFMD <- c(ListFMD,FMD)
 }
-
-#calcule la moyenne et la sd de toutes les distances FMD
-cat("FMD mean =", mean(ListFMD), "\n")
-cat("FMD sd =" , sd(ListFMD), "\n")
 
 #heatmap de la dernière matrice Ω.
 colnames(omegaB) <-c(pnames)
@@ -42,13 +35,16 @@ cim_color <- colorRampPalette(rev(brewer.pal(9, "Blues")))(16)
 cim(cor.mat, color = cim_color, symkey = FALSE, margins = c(10, 10), title = "Correlation map based on last "~hat(Omega))
 #SVD de la dernière matrice Ω.
 SVD_omega<-plot.omega(omega=omegaB, pop.names=pnames, main = expression("Singular Value Decomposition of last " * ~hat(Omega)), pos=3)
-SVD_omega
+
+#calcule la moyenne et la sd de toutes les distances FMD
+cat("FMD mean =", mean(ListFMD), "\n")
+cat("FMD sd =" , sd(ListFMD), "\n")
 ```
 Une fois la moyenne des FMD calculées il est possible de visualiser les liens génétiques entre populations représentés par la matrice Ω par un plot en heatmap ainsi que par la décomposition en valeurs singulières (SVD) d'une matrice prise au hasard.Un exemple de script pour convertir une SVD en plot ggplot2 beaucoup plus maniable et paramétrable pour une publication par exemple est donné en [Annexe 2](#An2)
 Cette matrice SVD représente les distances génétiques des populations analysées.
 
 ## Concaténation des résultats{-}
-Une fois la reproductibilité des analyses vérifiées, il faut concaténer tous les fichiers de résultats, l'idée étant de faire le lien entre chaque fichier de résultat et son fichier de position **_snpdet.sub_** correspondant puis de les concaténer les uns aux autres. Les fichiers avec l'extension **__summary_pi_xtx.out_** contiennent les resultats liés à la statistique de differenciation **_XtX_**, le script (Script \@ref(exm:script5)) est un exemple de script bash adapté à ce type de fichier.
+Une fois la reproductibilité des analyses vérifiées, il faut concaténer tous les fichiers de résultats, l'idée étant de faire le lien entre chaque fichier de résultat et son fichier de position **_snpdet.sub_** correspondant puis de les concaténer les uns aux autres. Les fichiers avec l'extension **_summary_pi_xtx.out_** contiennent les resultats liés à la statistique de differenciation **_XtX_**, le script (Script \@ref(exm:script5)) est un exemple de script bash adapté à ce type de fichier.
 
 ```{example, script5}
 <span style="color:darkgreen">Exemple d'un script bash pour concaténer les résultats _XtX_.</span>
@@ -73,7 +69,7 @@ done
 #on tri par chromosome et position
 awk '{for (i=1;i<=NF;i++) if ($i+0 == $i && $i ~ /e/) $2 = sprintf("%.0f", $i)} 1' tmp.xtx.merged | sort -k1,1 -k2,2n - > 8pops_M-chr1-Core.xtx		
 
-#on supprime les fichiers tmp
+#on supprime les fichiers temporaire
 rm tmp.xtx.merged
 rm SubSNP.x
 rm SubData.x

@@ -38,7 +38,7 @@ Les étapes de contrôle qualité et d’alignement des données de séquençage
 <p style="font-family:calibri; font-size:11pt; font-style:italic; color:darkgreen">
    Si l’on veut découper le travail en chromosomes, il est indispensable de travailler sur des fichiers bam correctement indexés et d’utiliser l’option -r/--region qui tire profit de cet index.
 </p>
-```{bash scr1, eval=FALSE, highlight=TRUE, class.source='bg-linux'}
+```{bash scr1, eval=FALSE, highlight=TRUE, class.source='.bg-linux'}
 #!/bin/bash
 #SBATCH --array=1-29            #création de l'array: un élément/indice par chromosome
 
@@ -72,7 +72,7 @@ A l'issue du variant calling les fichiers **_vcf_** des autosomes seront concat�
 <p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
    On peut utiliser les bcftools pour concaténer les fichier **_vcf_**, la liste des fichiers à traiter est contenue dans une variable alimentée par une boucle "for".
 </p>
-```{bash scr2, eval=FALSE, class.source='bg-linux'}
+```{bash scr2, eval=FALSE, class.source="bg-linux"}
 #!/bin/bash
 module load bioinfo/bcftools/1.14
 my_path='/../'
@@ -102,7 +102,6 @@ library(RColorBrewer)   #gestion couleur des heatmaps
 library(mixOmics)       #"cim" pour heatmap
 library(corrplot)       #matrice de corrélation pour heat map
 library(VennDiagram)    #création de diagramme de Venn
-library(nVennR)         #extraction de données d'un diagramme de Venn
 library(tidyverse)      #manipulation de données (dplyr) et plots (ggplot2)
 
 #définition des chemins de travail
@@ -119,7 +118,6 @@ library(RColorBrewer)   #gestion couleur des heatmaps
 library(mixOmics)       #"cim" pour heatmap
 library(corrplot)       #matrice de corrélation pour heat map
 library(VennDiagram)    #création de diagramme de Venn
-library(nVennR)         #extraction de données d'un diagramme de Venn
 library(tidyverse)      #manipulation de données (dplyr) et plots (ggplot2)
 source("C:/BayPass/utils/baypass_utils.R")
 source("C:/BayPass/utils/Fenetres_glissantes.R")

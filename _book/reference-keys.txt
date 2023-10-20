@@ -15,3 +15,5 @@ exr:chunk6
 exr:chunk7
 exr:chunk8
 exr:chunk9
+exr:chunk10
+exr:chunk11
