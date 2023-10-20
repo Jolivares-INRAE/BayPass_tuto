@@ -1,5 +1,5 @@
 --- 
-title: "BayPass 2.3: tutoriel de génomique d'association adapté au séquençage en pool"
+title: "BayPass 2.4: tutoriel de génomique d'association adapté au séquençage en pool"
 author:
 - Jérôme OLIVARES^[INRAE, UR-1115 PSH, 228 route de l’aérodrome, 84914 Avignon, France]
 date: "`r Sys.Date()`"
@@ -7,7 +7,7 @@ cover-image: "C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg"
 
 site: bookdown::bookdown_site
 output:
-  bookdown::gitbook:
+  bookdown::html_document2:
     css: "style.css"
 documentclass: book
 classoption: openany
