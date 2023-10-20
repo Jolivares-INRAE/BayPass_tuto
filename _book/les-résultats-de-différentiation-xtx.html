@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Les résultats de différentiation XtX: | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Les résultats de différentiation XtX: | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://jolivares-inrae.github.io/BayPass_Tutorial/C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg" />
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="https://github.com/Jolivares-INRAE/BayPass_Tutorial" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Les résultats de différentiation XtX: | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="twitter:image" content="https://jolivares-inrae.github.io/BayPass_Tutorial/C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg" />
+
+<meta name="author" content="Jérôme OLIVARES" />
+
+
+<meta name="date" content="2023-10-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="exploitation-des-résultats.html"/>
+<link rel="next" href="les-résultats-de-bayes-factor-bf.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+\usepackage{booktabs}
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Résumé</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#mots-clefs"><i class="fa fa-check"></i>mots clefs</a></li>
+<li class="chapter" data-level="" data-path="prérequis.html"><a href="prérequis.html"><i class="fa fa-check"></i>prérequis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="" data-path="présentation-du-logiciel-baypass-2.html"><a href="présentation-du-logiciel-baypass-2.html"><i class="fa fa-check"></i>Présentation du logiciel BayPass 2.3</a>
+<ul>
+<li class="chapter" data-level="" data-path="présentation-générale-de-lanalyse.html"><a href="présentation-générale-de-lanalyse.html"><i class="fa fa-check"></i>Présentation générale de l’analyse :</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="données-brutes.html"><a href="données-brutes.html"><i class="fa fa-check"></i>Données brutes</a>
+<ul>
+<li class="chapter" data-level="" data-path="obtention-dun-fichier-poolseq.html"><a href="obtention-dun-fichier-poolseq.html"><i class="fa fa-check"></i>Obtention d’un fichier Poolseq.vcf :</a></li>
+<li class="chapter" data-level="" data-path="filtrage-des-données-brutes.html"><a href="filtrage-des-données-brutes.html"><i class="fa fa-check"></i>Filtrage des données brutes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"><a href="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"><i class="fa fa-check"></i>Conversion du pooldata en fichiers d’entrées pour BayPass</a>
+<ul>
+<li class="chapter" data-level="" data-path="design-de-lanalyse-baypass.html"><a href="design-de-lanalyse-baypass.html"><i class="fa fa-check"></i>Design de l’analyse BayPass</a></li>
+<li class="chapter" data-level="" data-path="subsampling.html"><a href="subsampling.html"><i class="fa fa-check"></i>Subsampling</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="baypass-lanalyse-poolseq.html"><a href="baypass-lanalyse-poolseq.html"><i class="fa fa-check"></i>Baypass : l’analyse poolseq</a></li>
+<li class="chapter" data-level="" data-path="baypass-les-résultats.html"><a href="baypass-les-résultats.html"><i class="fa fa-check"></i>Baypass : les résultats</a>
+<ul>
+<li class="chapter" data-level="" data-path="validation-des-données-analysées.html"><a href="validation-des-données-analysées.html"><i class="fa fa-check"></i>Validation des données analysées</a></li>
+<li class="chapter" data-level="" data-path="concaténation-des-résultats.html"><a href="concaténation-des-résultats.html"><i class="fa fa-check"></i>Concaténation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="exploitation-des-résultats.html"><a href="exploitation-des-résultats.html"><i class="fa fa-check"></i>Exploitation des résultats</a>
+<ul>
+<li class="chapter" data-level="" data-path="les-résultats-de-différentiation-xtx.html"><a href="les-résultats-de-différentiation-xtx.html"><i class="fa fa-check"></i>Les résultats de différentiation <em>XtX</em>:</a></li>
+<li class="chapter" data-level="" data-path="les-résultats-de-bayes-factor-bf.html"><a href="les-résultats-de-bayes-factor-bf.html"><i class="fa fa-check"></i>Les résultats de Bayes Factor <em>BF</em>:</a></li>
+<li class="chapter" data-level="" data-path="les-résultats-de-contraste-c2.html"><a href="les-résultats-de-contraste-c2.html"><i class="fa fa-check"></i>Les résultats de Contraste <em>C2</em>:</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="approche-par-fenêtres-glissantes.html"><a href="approche-par-fenêtres-glissantes.html"><i class="fa fa-check"></i>Approche par fenêtres glissantes</a></li>
+<li class="chapter" data-level="" data-path="annexes.html"><a href="annexes.html"><i class="fa fa-check"></i>Annexes</a>
+<ul>
+<li class="chapter" data-level="" data-path="An1.html"><a href="An1.html"><i class="fa fa-check"></i>Annexe 1</a>
+<ul>
+<li class="chapter" data-level="" data-path="An1.html"><a href="An1.html#fst-en-fenêtre-glissante"><i class="fa fa-check"></i>Fst en fenêtre glissante</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An2.html"><a href="An2.html"><i class="fa fa-check"></i>Annexe 2</a>
+<ul>
+<li class="chapter" data-level="" data-path="An2.html"><a href="An2.html#conversion-de-la-matrice-svd-en-graphique-ggplot"><i class="fa fa-check"></i>Conversion de la matrice SVD en graphique ggplot</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An3.html"><a href="An3.html"><i class="fa fa-check"></i>Annexe 3</a>
+<ul>
+<li class="chapter" data-level="" data-path="An3.html"><a href="An3.html#concaténages-des-résultats-betai-et-contrastes"><i class="fa fa-check"></i>Concaténages des résultats Betai et contrastes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An4.html"><a href="An4.html"><i class="fa fa-check"></i>Annexe 4</a>
+<ul>
+<li class="chapter" data-level="" data-path="An4.html"><a href="An4.html#création-et-analyse-dun-jeu-de-données-pseudo-observées-pod"><i class="fa fa-check"></i>Création et analyse d’un jeu de données pseudo-observées (POD)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="références.html"><a href="références.html"><i class="fa fa-check"></i>Références</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="les-résultats-de-différentiation-xtx" class="section level2 unnumbered hasAnchor">
+<h2>Les résultats de différentiation <em>XtX</em>:<a href="les-résultats-de-différentiation-xtx.html#les-résultats-de-différentiation-xtx" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Les colonnes <strong><em>M_P</em></strong> et <strong><em>SD_P</em></strong> correspondent, pour simplifier et pour chaque SNP, à la moyenne de la fréquence de l’allèle référence dans toutes les populations analysées et sa standard déviation. A noter que les fichiers avec les extensions <strong><em>yij_pij.out</em></strong> contiennent le détail de ces fréquences alléliques corrigées de l’allèle référence pour chacune des populations analysées.
+La colonne <strong><em>M_xtx</em></strong> correspond aux valeurs de la statistique <em>XtX</em>, la colonne <strong><em>XtXst</em></strong> est une version recalibrée du <em>XtX</em> et <strong><em>log10(1/pval)</em></strong> sa p.value.
+Il est à noté qu’une valeur faible de <em>XtX</em> associée à un <em>log10(1/pval)</em> élevé est signe de sélection balancée, une valeur élevé de <em>XtX</em> et de <em>log10(1/pval)</em> est un signe de sélection positive.</p>
+<p>Une dernière vérification consiste à vérifier la distribution des p.values associées aux <em>XtXst</em> avec le script (Chunk <a href="les-résultats-de-différentiation-xtx.html#exr:chunk7">7</a>)</p>
+<div class="exercise">
+<p><span id="exr:chunk7" class="exercise"><strong>Chunk 7  </strong></span><span style="color:darkgreen">Distribution des p.values</span></p>
+</div>
+<p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
+L’histogramme de la colonne <em>log10(1/pval)</em> du fichier de résultat permet d’avoir une idée immédiate de la distribution normale ou non des p.values de l’analyse.<br>
+</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb24-1"><a href="les-résultats-de-différentiation-xtx.html#cb24-1" tabindex="-1"></a><span class="fu">hist</span>(<span class="dv">10</span><span class="sc">**</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">*</span>XtX.res<span class="sc">$</span>log10.<span class="fl">1.</span>pval.),<span class="at">freq=</span>F,<span class="at">breaks=</span><span class="dv">50</span>)</span>
+<span id="cb24-2"><a href="les-résultats-de-différentiation-xtx.html#cb24-2" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">1</span>)</span></code></pre></div>
+<p><img src="BayPass_Fr_files/figure-html/Distribution-XtX-1.png" width="672" />
+Une explication de comment interpréter cet histogramme de distribution est disponible à l’adresse:
+<a href="http://varianceexplained.org/statistics/interpreting-pvalue-histogram/" class="uri">http://varianceexplained.org/statistics/interpreting-pvalue-histogram/</a>
+Si cette distribution n’est pas normale il est souhaitable de calibrer les résultats avec un jeu de données simulées POD (voir <a href="An4.html#An4">Annexe 4</a>) afin de définir des seuils de significativités fiables.</p>
+<p>Un Manhattan plot simple des valeurs de <em>XtX</em> permet de visualiser les régions génomiques différentiées des populations analysées (Chunk <a href="les-résultats-de-différentiation-xtx.html#exr:chunk8">8</a>).
+Les valeurs de XtX les plus élevés indiquent une différentiation significative entre les populations, parmi ces SNP ceux qui ont une valeur <em>log10(1/pval)</em> élevée indique une signature de sélection positive. A l’inverse, des valeurs de <em>log10(1/pval)</em> élevées associées à des XtX faibles sont plutôt signe d’une sélection balancée.</p>
+<div class="exercise">
+<p><span id="exr:chunk8" class="exercise"><strong>Chunk 8  </strong></span><span style="color:darkgreen">Exploitation des XtX</span></p>
+</div>
+<p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
+Les valeurs de <em>XtX</em> sont contenues dans la colonne <strong><em>M_XtX</em></strong><br>
+L’affichage des chromosomes peut se faire en grille (facet_wrap) ou en ligne (facet_grid).<br>
+</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb25-1"><a href="les-résultats-de-différentiation-xtx.html#cb25-1" tabindex="-1"></a>Manplot.XtX <span class="ot">=</span> <span class="fu">ggplot</span>(<span class="at">data=</span>Full.res, <span class="fu">aes</span>(<span class="at">x=</span>pos, <span class="at">y=</span>M_XtX)) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="les-résultats-de-différentiation-xtx.html#cb25-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>chr), <span class="at">alpha=</span><span class="fl">0.8</span>, <span class="at">size=</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="les-résultats-de-différentiation-xtx.html#cb25-3" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x=</span><span class="fu">element_blank</span>(), <span class="at">axis.text.x=</span><span class="fu">element_blank</span>(), <span class="at">axis.ticks.x=</span><span class="fu">element_blank</span>())</span>
+<span id="cb25-4"><a href="les-résultats-de-différentiation-xtx.html#cb25-4" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="les-résultats-de-différentiation-xtx.html#cb25-5" tabindex="-1"></a>Manplot.XtX <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;Plot simple XtX versus position (facet wrap)&quot;</span>)<span class="sc">+</span></span>
+<span id="cb25-6"><a href="les-résultats-de-différentiation-xtx.html#cb25-6" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>chr, <span class="at">scales =</span> <span class="st">&#39;free_x&#39;</span>, <span class="at">strip.position =</span> <span class="fu">c</span>(<span class="st">&quot;bottom&quot;</span>))</span></code></pre></div>
+<p><img src="BayPass_Fr_files/figure-html/plot_XtX-1.png" width="672" /></p>
+<p>Dans l’exemple précédent on peut voir plusieurs régions génomiques fortement différenciées en particulier au milieu du chromosome 3.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="exploitation-des-résultats.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="les-résultats-de-bayes-factor-bf.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

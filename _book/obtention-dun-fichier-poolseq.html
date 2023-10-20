@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Obtention d’un fichier Poolseq.vcf : | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Obtention d’un fichier Poolseq.vcf : | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://jolivares-inrae.github.io/BayPass_Tutorial/C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg" />
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="https://github.com/Jolivares-INRAE/BayPass_Tutorial" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Obtention d’un fichier Poolseq.vcf : | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="twitter:image" content="https://jolivares-inrae.github.io/BayPass_Tutorial/C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg" />
+
+<meta name="author" content="Jérôme OLIVARES" />
+
+
+<meta name="date" content="2023-10-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="données-brutes.html"/>
+<link rel="next" href="filtrage-des-données-brutes.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+\usepackage{booktabs}
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Résumé</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#mots-clefs"><i class="fa fa-check"></i>mots clefs</a></li>
+<li class="chapter" data-level="" data-path="prérequis.html"><a href="prérequis.html"><i class="fa fa-check"></i>prérequis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="" data-path="présentation-du-logiciel-baypass-2.html"><a href="présentation-du-logiciel-baypass-2.html"><i class="fa fa-check"></i>Présentation du logiciel BayPass 2.3</a>
+<ul>
+<li class="chapter" data-level="" data-path="présentation-générale-de-lanalyse.html"><a href="présentation-générale-de-lanalyse.html"><i class="fa fa-check"></i>Présentation générale de l’analyse :</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="données-brutes.html"><a href="données-brutes.html"><i class="fa fa-check"></i>Données brutes</a>
+<ul>
+<li class="chapter" data-level="" data-path="obtention-dun-fichier-poolseq.html"><a href="obtention-dun-fichier-poolseq.html"><i class="fa fa-check"></i>Obtention d’un fichier Poolseq.vcf :</a></li>
+<li class="chapter" data-level="" data-path="filtrage-des-données-brutes.html"><a href="filtrage-des-données-brutes.html"><i class="fa fa-check"></i>Filtrage des données brutes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"><a href="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"><i class="fa fa-check"></i>Conversion du pooldata en fichiers d’entrées pour BayPass</a>
+<ul>
+<li class="chapter" data-level="" data-path="design-de-lanalyse-baypass.html"><a href="design-de-lanalyse-baypass.html"><i class="fa fa-check"></i>Design de l’analyse BayPass</a></li>
+<li class="chapter" data-level="" data-path="subsampling.html"><a href="subsampling.html"><i class="fa fa-check"></i>Subsampling</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="baypass-lanalyse-poolseq.html"><a href="baypass-lanalyse-poolseq.html"><i class="fa fa-check"></i>Baypass : l’analyse poolseq</a></li>
+<li class="chapter" data-level="" data-path="baypass-les-résultats.html"><a href="baypass-les-résultats.html"><i class="fa fa-check"></i>Baypass : les résultats</a>
+<ul>
+<li class="chapter" data-level="" data-path="validation-des-données-analysées.html"><a href="validation-des-données-analysées.html"><i class="fa fa-check"></i>Validation des données analysées</a></li>
+<li class="chapter" data-level="" data-path="concaténation-des-résultats.html"><a href="concaténation-des-résultats.html"><i class="fa fa-check"></i>Concaténation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="exploitation-des-résultats.html"><a href="exploitation-des-résultats.html"><i class="fa fa-check"></i>Exploitation des résultats</a>
+<ul>
+<li class="chapter" data-level="" data-path="les-résultats-de-différentiation-xtx.html"><a href="les-résultats-de-différentiation-xtx.html"><i class="fa fa-check"></i>Les résultats de différentiation <em>XtX</em>:</a></li>
+<li class="chapter" data-level="" data-path="les-résultats-de-bayes-factor-bf.html"><a href="les-résultats-de-bayes-factor-bf.html"><i class="fa fa-check"></i>Les résultats de Bayes Factor <em>BF</em>:</a></li>
+<li class="chapter" data-level="" data-path="les-résultats-de-contraste-c2.html"><a href="les-résultats-de-contraste-c2.html"><i class="fa fa-check"></i>Les résultats de Contraste <em>C2</em>:</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="approche-par-fenêtres-glissantes.html"><a href="approche-par-fenêtres-glissantes.html"><i class="fa fa-check"></i>Approche par fenêtres glissantes</a></li>
+<li class="chapter" data-level="" data-path="annexes.html"><a href="annexes.html"><i class="fa fa-check"></i>Annexes</a>
+<ul>
+<li class="chapter" data-level="" data-path="An1.html"><a href="An1.html"><i class="fa fa-check"></i>Annexe 1</a>
+<ul>
+<li class="chapter" data-level="" data-path="An1.html"><a href="An1.html#fst-en-fenêtre-glissante"><i class="fa fa-check"></i>Fst en fenêtre glissante</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An2.html"><a href="An2.html"><i class="fa fa-check"></i>Annexe 2</a>
+<ul>
+<li class="chapter" data-level="" data-path="An2.html"><a href="An2.html#conversion-de-la-matrice-svd-en-graphique-ggplot"><i class="fa fa-check"></i>Conversion de la matrice SVD en graphique ggplot</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An3.html"><a href="An3.html"><i class="fa fa-check"></i>Annexe 3</a>
+<ul>
+<li class="chapter" data-level="" data-path="An3.html"><a href="An3.html#concaténages-des-résultats-betai-et-contrastes"><i class="fa fa-check"></i>Concaténages des résultats Betai et contrastes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An4.html"><a href="An4.html"><i class="fa fa-check"></i>Annexe 4</a>
+<ul>
+<li class="chapter" data-level="" data-path="An4.html"><a href="An4.html#création-et-analyse-dun-jeu-de-données-pseudo-observées-pod"><i class="fa fa-check"></i>Création et analyse d’un jeu de données pseudo-observées (POD)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="références.html"><a href="références.html"><i class="fa fa-check"></i>Références</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="obtention-dun-fichier-poolseq.vcf" class="section level2 unnumbered hasAnchor">
+<h2>Obtention d’un fichier Poolseq.vcf :<a href="obtention-dun-fichier-poolseq.html#obtention-dun-fichier-poolseq.vcf" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Les étapes de contrôle qualité et d’alignement des données de séquençage sont largement documentés par ailleurs, et ne serons donc pas documenter ici, et nous partirons directement des fichiers d’alignement <strong><em>bam</em></strong>. La première étape consiste à regrouper les fichiers <strong><em>bam</em></strong> de toutes les populations en un seul fichier puis à effectuer le variant calling avec un logiciel dédié compatible avec le séquençage en pool afin de conserver les informations de profondeur. Nous recommandons l’utilisation des Samtools <span class="citation">(<a href="références.html#ref-li_sequence_2009">Li et al. 2009</a>)</span> et de Varscan 2 <span class="citation">(<a href="références.html#ref-koboldt_varscan_2012">Koboldt et al. 2012</a>)</span> avec une instruction pipe entre les deux pour éviter les fichiers intermédiaires et économiser l’espace de travail (Script <a href="obtention-dun-fichier-poolseq.html#exm:script1">1</a>). Les commandes sont effectuées avec les paramètres de base, sauf la p-value qui est montée à 0.5 pour être le moins stringent possible à ce stade. On peut découper le travail en plusieurs chromosomes pour réduire les temps de calculs.</p>
+<div class="example">
+<p><span id="exm:script1" class="example"><strong>Script 1  </strong></span><span style="color:darkgreen">Exemple d’un script bash pour effectuer un variant calling</span></p>
+</div>
+<p style="font-family:calibri; font-size:11pt; font-style:italic; color:darkgreen">
+Si l’on veut découper le travail en chromosomes, il est indispensable de travailler sur des fichiers bam correctement indexés et d’utiliser l’option -r/–region qui tire profit de cet index.
+</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash bg-linux"><code class="sourceCode bash"><span id="cb1-1"><a href="obtention-dun-fichier-poolseq.html#cb1-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb1-2"><a href="obtention-dun-fichier-poolseq.html#cb1-2" tabindex="-1"></a><span class="co">#SBATCH --array=1-29            #création de l&#39;array: un élément/indice par chromosome</span></span>
+<span id="cb1-3"><a href="obtention-dun-fichier-poolseq.html#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="obtention-dun-fichier-poolseq.html#cb1-4" tabindex="-1"></a><span class="ex">module</span> load bioinfo/samtools/1.12</span>
+<span id="cb1-5"><a href="obtention-dun-fichier-poolseq.html#cb1-5" tabindex="-1"></a><span class="ex">module</span> load bioinfo/VarScan/2.4.2</span>
+<span id="cb1-6"><a href="obtention-dun-fichier-poolseq.html#cb1-6" tabindex="-1"></a><span class="ex">module</span> load bioinfo/bcftools/1.14</span>
+<span id="cb1-7"><a href="obtention-dun-fichier-poolseq.html#cb1-7" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="obtention-dun-fichier-poolseq.html#cb1-8" tabindex="-1"></a><span class="co">#liste tous les fichiers &quot;bam&quot; et leur chemin</span></span>
+<span id="cb1-9"><a href="obtention-dun-fichier-poolseq.html#cb1-9" tabindex="-1"></a><span class="fu">ls</span> /../<span class="pp">*</span>.bam <span class="op">&gt;</span> BamList.txt</span>
+<span id="cb1-10"><a href="obtention-dun-fichier-poolseq.html#cb1-10" tabindex="-1"></a><span class="co">#extrait les noms des échantillons/populations</span></span>
+<span id="cb1-11"><a href="obtention-dun-fichier-poolseq.html#cb1-11" tabindex="-1"></a><span class="fu">ls</span> /../<span class="pp">*</span>.bam <span class="kw">|</span> <span class="fu">sed</span> <span class="at">-r</span> <span class="st">&#39;s/^.+\///&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="at">-r</span> <span class="st">&#39;s/.bam//&#39;</span> <span class="op">&gt;</span> NameList.txt      </span>
+<span id="cb1-12"><a href="obtention-dun-fichier-poolseq.html#cb1-12" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="obtention-dun-fichier-poolseq.html#cb1-13" tabindex="-1"></a><span class="ex">samtools</span> mpileup <span class="at">-C</span> 50 <span class="at">-d</span> 5000 <span class="at">-q</span> 20 <span class="dt">\</span></span>
+<span id="cb1-14"><a href="obtention-dun-fichier-poolseq.html#cb1-14" tabindex="-1"></a>-r chr<span class="va">${SLURM_ARRAY_TASK_ID}</span> <span class="dt">\ </span>   <span class="co">#attribut un chr à chaque indice de l&#39;array : chr1, chr2 ...</span></span>
+<span id="cb1-15"><a href="obtention-dun-fichier-poolseq.html#cb1-15" tabindex="-1"></a><span class="ex">-f</span> /../ref_genome.fas <span class="at">-b</span> /../BamList.txt <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb1-16"><a href="obtention-dun-fichier-poolseq.html#cb1-16" tabindex="-1"></a><span class="ex">java</span> <span class="at">-Xmx2G</span> <span class="at">-jar</span> <span class="va">$VARSCAN</span> mpileup2cns <span class="dt">\</span></span>
+<span id="cb1-17"><a href="obtention-dun-fichier-poolseq.html#cb1-17" tabindex="-1"></a>--variants <span class="at">--min-coverage</span> 10 <span class="dt">\</span></span>
+<span id="cb1-18"><a href="obtention-dun-fichier-poolseq.html#cb1-18" tabindex="-1"></a>--min-avg-qual 20 <span class="at">--min-var-freq</span> 0.05 <span class="dt">\</span></span>
+<span id="cb1-19"><a href="obtention-dun-fichier-poolseq.html#cb1-19" tabindex="-1"></a>--p-value 0.5 <span class="at">--output-vcf</span> 1 <span class="dt">\</span></span>
+<span id="cb1-20"><a href="obtention-dun-fichier-poolseq.html#cb1-20" tabindex="-1"></a>--vcf-sample-list NameList.txt <span class="op">&gt;</span> /../project_chr<span class="va">${SLURM_ARRAY_TASK_ID}</span>.vcf</span>
+<span id="cb1-21"><a href="obtention-dun-fichier-poolseq.html#cb1-21" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="obtention-dun-fichier-poolseq.html#cb1-22" tabindex="-1"></a><span class="ex">bgzip</span> /../project_chr<span class="va">${SLURM_ARRAY_TASK_ID}</span>.vcf</span>
+<span id="cb1-23"><a href="obtention-dun-fichier-poolseq.html#cb1-23" tabindex="-1"></a><span class="ex">bcftools</span> index /../project_chr<span class="va">${SLURM_ARRAY_TASK_ID}</span>.vcf</span></code></pre></div>
+<p>A l’issue du variant calling les fichiers <strong><em>vcf</em></strong> des autosomes seront concaténés (Script <a href="obtention-dun-fichier-poolseq.html#exm:script2">2</a>), les chromosomes sexuels ayant une ségrégation, une histoire démographique et une ploïdie différente des autosomes il conviendra, lorsque cela est possible, de les analyser à part.</p>
+<div class="example">
+<p><span id="exm:script2" class="example"><strong>Script 2  </strong></span><span style="color:darkgreen">Exemple d’un script bash pour concaténer des fichiers <strong><em>vcf</em></strong></span></p>
+</div>
+<p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
+On peut utiliser les bcftools pour concaténer les fichier <strong><em>vcf</em></strong>, la liste des fichiers à traiter est contenue dans une variable alimentée par une boucle “for”.
+</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash bg-linux"><code class="sourceCode bash"><span id="cb2-1"><a href="obtention-dun-fichier-poolseq.html#cb2-1" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb2-2"><a href="obtention-dun-fichier-poolseq.html#cb2-2" tabindex="-1"></a><span class="ex">module</span> load bioinfo/bcftools/1.14</span>
+<span id="cb2-3"><a href="obtention-dun-fichier-poolseq.html#cb2-3" tabindex="-1"></a><span class="va">my_path</span><span class="op">=</span><span class="st">&#39;/../&#39;</span></span>
+<span id="cb2-4"><a href="obtention-dun-fichier-poolseq.html#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="obtention-dun-fichier-poolseq.html#cb2-5" tabindex="-1"></a><span class="co"># une boucle &quot;for&quot; itére sur les numéros des autosomes de 2 à 28</span></span>
+<span id="cb2-6"><a href="obtention-dun-fichier-poolseq.html#cb2-6" tabindex="-1"></a><span class="co"># et ajoute chaque fichier vcf et son chemin dans une variable</span></span>
+<span id="cb2-7"><a href="obtention-dun-fichier-poolseq.html#cb2-7" tabindex="-1"></a><span class="cf">for</span> <span class="kw">((</span><span class="va">i</span><span class="op">=</span><span class="dv">2</span><span class="kw">;</span> <span class="va">i</span><span class="op">&lt;=</span><span class="dv">28</span><span class="kw">;</span> <span class="va">i</span><span class="op">++</span><span class="kw">))</span></span>
+<span id="cb2-8"><a href="obtention-dun-fichier-poolseq.html#cb2-8" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb2-9"><a href="obtention-dun-fichier-poolseq.html#cb2-9" tabindex="-1"></a>    <span class="va">files</span><span class="op">+=</span><span class="st">&quot; </span><span class="va">$my_path</span><span class="st">/project_chr</span><span class="va">${i}</span><span class="st">.vcf.gz&quot;</span>  </span>
+<span id="cb2-10"><a href="obtention-dun-fichier-poolseq.html#cb2-10" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb2-11"><a href="obtention-dun-fichier-poolseq.html#cb2-11" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="obtention-dun-fichier-poolseq.html#cb2-12" tabindex="-1"></a><span class="co"># bcftools concatène la liste des vcf contenu dans la variable $file</span></span>
+<span id="cb2-13"><a href="obtention-dun-fichier-poolseq.html#cb2-13" tabindex="-1"></a><span class="ex">bcftools</span> concat <span class="va">$files</span> <span class="at">-O</span> z <span class="at">-o</span> <span class="va">$my_path</span>/project_chr2-28.vcf.gz</span></code></pre></div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="données-brutes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="filtrage-des-données-brutes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+body {
+  text-align: justify;
+}
+.bg-linux {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.bg-chunk {
+  background-color: #e4f0fe;
+  border: 1px solid black;
+}
+
+.bg-output {
+  background-color: white;
+  border: 1px solid black;
+}

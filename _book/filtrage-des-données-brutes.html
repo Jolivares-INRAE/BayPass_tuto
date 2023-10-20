@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Filtrage des données brutes | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool</title>
+  <meta name="description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Filtrage des données brutes | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://jolivares-inrae.github.io/BayPass_Tutorial/C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg" />
+  <meta property="og:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="github-repo" content="https://github.com/Jolivares-INRAE/BayPass_Tutorial" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Filtrage des données brutes | BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool" />
+  
+  <meta name="twitter:description" content="<p>This is a minimal example of using the bookdown package to write a book.
+The HTML output format for this example is bookdown::gitbook,
+set in the _output.yml file.</p>" />
+  <meta name="twitter:image" content="https://jolivares-inrae.github.io/BayPass_Tutorial/C:/Users/Olivares/Documents/R/Git_Work/BayPass_Tutorial/cover.jpg" />
+
+<meta name="author" content="Jérôme OLIVARES" />
+
+
+<meta name="date" content="2023-10-20" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="obtention-dun-fichier-poolseq.html"/>
+<link rel="next" href="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+\usepackage{booktabs}
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Résumé</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#mots-clefs"><i class="fa fa-check"></i>mots clefs</a></li>
+<li class="chapter" data-level="" data-path="prérequis.html"><a href="prérequis.html"><i class="fa fa-check"></i>prérequis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i>Introduction</a></li>
+<li class="chapter" data-level="" data-path="présentation-du-logiciel-baypass-2.html"><a href="présentation-du-logiciel-baypass-2.html"><i class="fa fa-check"></i>Présentation du logiciel BayPass 2.3</a>
+<ul>
+<li class="chapter" data-level="" data-path="présentation-générale-de-lanalyse.html"><a href="présentation-générale-de-lanalyse.html"><i class="fa fa-check"></i>Présentation générale de l’analyse :</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="données-brutes.html"><a href="données-brutes.html"><i class="fa fa-check"></i>Données brutes</a>
+<ul>
+<li class="chapter" data-level="" data-path="obtention-dun-fichier-poolseq.html"><a href="obtention-dun-fichier-poolseq.html"><i class="fa fa-check"></i>Obtention d’un fichier Poolseq.vcf :</a></li>
+<li class="chapter" data-level="" data-path="filtrage-des-données-brutes.html"><a href="filtrage-des-données-brutes.html"><i class="fa fa-check"></i>Filtrage des données brutes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"><a href="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html"><i class="fa fa-check"></i>Conversion du pooldata en fichiers d’entrées pour BayPass</a>
+<ul>
+<li class="chapter" data-level="" data-path="design-de-lanalyse-baypass.html"><a href="design-de-lanalyse-baypass.html"><i class="fa fa-check"></i>Design de l’analyse BayPass</a></li>
+<li class="chapter" data-level="" data-path="subsampling.html"><a href="subsampling.html"><i class="fa fa-check"></i>Subsampling</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="baypass-lanalyse-poolseq.html"><a href="baypass-lanalyse-poolseq.html"><i class="fa fa-check"></i>Baypass : l’analyse poolseq</a></li>
+<li class="chapter" data-level="" data-path="baypass-les-résultats.html"><a href="baypass-les-résultats.html"><i class="fa fa-check"></i>Baypass : les résultats</a>
+<ul>
+<li class="chapter" data-level="" data-path="validation-des-données-analysées.html"><a href="validation-des-données-analysées.html"><i class="fa fa-check"></i>Validation des données analysées</a></li>
+<li class="chapter" data-level="" data-path="concaténation-des-résultats.html"><a href="concaténation-des-résultats.html"><i class="fa fa-check"></i>Concaténation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="exploitation-des-résultats.html"><a href="exploitation-des-résultats.html"><i class="fa fa-check"></i>Exploitation des résultats</a>
+<ul>
+<li class="chapter" data-level="" data-path="les-résultats-de-différentiation-xtx.html"><a href="les-résultats-de-différentiation-xtx.html"><i class="fa fa-check"></i>Les résultats de différentiation <em>XtX</em>:</a></li>
+<li class="chapter" data-level="" data-path="les-résultats-de-bayes-factor-bf.html"><a href="les-résultats-de-bayes-factor-bf.html"><i class="fa fa-check"></i>Les résultats de Bayes Factor <em>BF</em>:</a></li>
+<li class="chapter" data-level="" data-path="les-résultats-de-contraste-c2.html"><a href="les-résultats-de-contraste-c2.html"><i class="fa fa-check"></i>Les résultats de Contraste <em>C2</em>:</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="approche-par-fenêtres-glissantes.html"><a href="approche-par-fenêtres-glissantes.html"><i class="fa fa-check"></i>Approche par fenêtres glissantes</a></li>
+<li class="chapter" data-level="" data-path="annexes.html"><a href="annexes.html"><i class="fa fa-check"></i>Annexes</a>
+<ul>
+<li class="chapter" data-level="" data-path="An1.html"><a href="An1.html"><i class="fa fa-check"></i>Annexe 1</a>
+<ul>
+<li class="chapter" data-level="" data-path="An1.html"><a href="An1.html#fst-en-fenêtre-glissante"><i class="fa fa-check"></i>Fst en fenêtre glissante</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An2.html"><a href="An2.html"><i class="fa fa-check"></i>Annexe 2</a>
+<ul>
+<li class="chapter" data-level="" data-path="An2.html"><a href="An2.html#conversion-de-la-matrice-svd-en-graphique-ggplot"><i class="fa fa-check"></i>Conversion de la matrice SVD en graphique ggplot</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An3.html"><a href="An3.html"><i class="fa fa-check"></i>Annexe 3</a>
+<ul>
+<li class="chapter" data-level="" data-path="An3.html"><a href="An3.html#concaténages-des-résultats-betai-et-contrastes"><i class="fa fa-check"></i>Concaténages des résultats Betai et contrastes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="An4.html"><a href="An4.html"><i class="fa fa-check"></i>Annexe 4</a>
+<ul>
+<li class="chapter" data-level="" data-path="An4.html"><a href="An4.html#création-et-analyse-dun-jeu-de-données-pseudo-observées-pod"><i class="fa fa-check"></i>Création et analyse d’un jeu de données pseudo-observées (POD)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="références.html"><a href="références.html"><i class="fa fa-check"></i>Références</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">BayPass 2.4: tutoriel de génomique d’association adapté au séquençage en pool</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="filtrage-des-données-brutes" class="section level2 unnumbered hasAnchor">
+<h2>Filtrage des données brutes<a href="filtrage-des-données-brutes.html#filtrage-des-données-brutes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Le fichier <strong><em>vcf</em></strong>, éventuellement compressé, est téléchargé sur un ordinateur local pour être analysé sous Rstudio.
+Dans un premier temps il faut charger les packages nécessaires et définir les chemins des différents dossiers qui seront utilisés (Chunk <a href="filtrage-des-données-brutes.html#exr:chunk1">1</a>)</p>
+<div class="exercise">
+<p><span id="exr:chunk1" class="exercise"><strong>Chunk 1  </strong></span><span style="color:darkgreen">Chargement des packages et chemins</span></p>
+</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb3-1"><a href="filtrage-des-données-brutes.html#cb3-1" tabindex="-1"></a><span class="fu">library</span>(poolfstat)      <span class="co">#filtrage du vcf et création des fichiers d&#39;entrées BayPass</span></span>
+<span id="cb3-2"><a href="filtrage-des-données-brutes.html#cb3-2" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)   <span class="co">#gestion couleur des heatmaps</span></span>
+<span id="cb3-3"><a href="filtrage-des-données-brutes.html#cb3-3" tabindex="-1"></a><span class="fu">library</span>(mixOmics)       <span class="co">#&quot;cim&quot; pour heatmap</span></span>
+<span id="cb3-4"><a href="filtrage-des-données-brutes.html#cb3-4" tabindex="-1"></a><span class="fu">library</span>(corrplot)       <span class="co">#matrice de corrélation pour heat map</span></span>
+<span id="cb3-5"><a href="filtrage-des-données-brutes.html#cb3-5" tabindex="-1"></a><span class="fu">library</span>(VennDiagram)    <span class="co">#création de diagramme de Venn</span></span>
+<span id="cb3-6"><a href="filtrage-des-données-brutes.html#cb3-6" tabindex="-1"></a><span class="fu">library</span>(tidyverse)      <span class="co">#manipulation de données (dplyr) et plots (ggplot2)</span></span>
+<span id="cb3-7"><a href="filtrage-des-données-brutes.html#cb3-7" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="filtrage-des-données-brutes.html#cb3-8" tabindex="-1"></a><span class="co">#définition des chemins de travail</span></span>
+<span id="cb3-9"><a href="filtrage-des-données-brutes.html#cb3-9" tabindex="-1"></a>path_vcf <span class="ot">&lt;-</span> <span class="st">&quot;/../vcf/&quot;</span></span>
+<span id="cb3-10"><a href="filtrage-des-données-brutes.html#cb3-10" tabindex="-1"></a>path_input <span class="ot">&lt;-</span> <span class="st">&quot;/../Input/&quot;</span></span>
+<span id="cb3-11"><a href="filtrage-des-données-brutes.html#cb3-11" tabindex="-1"></a>path_out <span class="ot">&lt;-</span> <span class="st">&quot;/../Output/&quot;</span></span>
+<span id="cb3-12"><a href="filtrage-des-données-brutes.html#cb3-12" tabindex="-1"></a>path_res <span class="ot">&lt;-</span> <span class="st">&quot;/../Resultats/&quot;</span></span>
+<span id="cb3-13"><a href="filtrage-des-données-brutes.html#cb3-13" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;/../baypass_utils.R&quot;</span>)   <span class="co">#fonctions utilitaires de BayPass</span></span></code></pre></div>
+<p>Le filtrage du <strong><em>vcf</em></strong> et la sélection des SNPs à analyser ce fait à l’aide du package PoolFstat (Chunk <a href="filtrage-des-données-brutes.html#exr:chunk2">2</a>). Dans un premier temps il faut renseigner les noms des populations dans un objet <strong><em>pnames</em></strong> et les tailles haploïdes de chaque population dans un objet <strong><em>psizes</em></strong>. Pour les organismes diploïdes, le nombre total de copies des autosomes sera deux fois le nombre d’individus dans le pool, pour les gonosomes Y ou W la ploïdie sera égale au nombre d’individus XY/ZW et pour les gonosomes X ou Z le calcul sera (nombre de XX/ZZ * 2) + (nombre de XY/ZW * 1).
+La fonction <strong><em>vcf2poodata</em></strong> va balayer le fichier <strong><em>vcf</em></strong>, sélectionner les SNP bi-alléliques selon des critères définis par l’utilisateur et créer un objet <strong><em>pooldata</em></strong>.</p>
+<div class="exercise">
+<p><span id="exr:chunk2" class="exercise"><strong>Chunk 2  </strong></span><span style="color:darkgreen">Filtrage et sélection des SNPs</span></p>
+</div>
+<p style="font-family: calibri; font-size:11pt; font-style:italic; color:darkgreen">
+Les options à renseigner sont:<br>
+min.cov.per.pool = Si au moins un pool n’est pas couvert par au moins au moins min.cov.perpool reads, le SNP est rejeté.<br>
+max.cov.per.pool = Si au moins un pool est couvert par plus de que max.cov.perpool reads, le SNP est rejeté.<br>
+min.maf = fréquence allélique minimale autorisée pour l’allèle minoritaire pour qu’un SNP soit retenu.<br>
+</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb4-1"><a href="filtrage-des-données-brutes.html#cb4-1" tabindex="-1"></a><span class="co">#Infos sur les pops</span></span>
+<span id="cb4-2"><a href="filtrage-des-données-brutes.html#cb4-2" tabindex="-1"></a>pnames <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;pop1S&quot;</span>, <span class="st">&quot;pop2S&quot;</span>, <span class="st">&quot;pop3S&quot;</span>, <span class="st">&quot;pop1R&quot;</span>, <span class="st">&quot;pop2R&quot;</span>, <span class="st">&quot;pop3R&quot;</span>)</span>
+<span id="cb4-3"><a href="filtrage-des-données-brutes.html#cb4-3" tabindex="-1"></a>psizes_A <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;114&#39;</span>, <span class="st">&#39;180&#39;</span>, <span class="st">&#39;160&#39;</span>, <span class="st">&#39;180&#39;</span>, <span class="st">&#39;200&#39;</span>, <span class="st">&#39;120&#39;</span>)   <span class="co">#ploydie autosome</span></span>
+<span id="cb4-4"><a href="filtrage-des-données-brutes.html#cb4-4" tabindex="-1"></a>psizes_X <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;86&#39;</span>, <span class="st">&#39;135&#39;</span>, <span class="st">&#39;120&#39;</span>, <span class="st">&#39;135&#39;</span>, <span class="st">&#39;150&#39;</span>, <span class="st">&#39;90&#39;</span>)     <span class="co">#ploydie X/Z</span></span>
+<span id="cb4-5"><a href="filtrage-des-données-brutes.html#cb4-5" tabindex="-1"></a>psizes_Y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;28&#39;</span>, <span class="st">&#39;45&#39;</span>, <span class="st">&#39;40&#39;</span>, <span class="st">&#39;45&#39;</span>, <span class="st">&#39;50&#39;</span>, <span class="st">&#39;30&#39;</span>)         <span class="co">#ploydie Y/W</span></span>
+<span id="cb4-6"><a href="filtrage-des-données-brutes.html#cb4-6" tabindex="-1"></a><span class="co">#conversion du .vcf</span></span>
+<span id="cb4-7"><a href="filtrage-des-données-brutes.html#cb4-7" tabindex="-1"></a>pooldata <span class="ot">&lt;-</span> <span class="fu">vcf2pooldata</span>(<span class="at">vcf.file =</span> <span class="fu">paste</span>(path_vcf, <span class="st">&quot;test_data.vcf.gz&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>),</span>
+<span id="cb4-8"><a href="filtrage-des-données-brutes.html#cb4-8" tabindex="-1"></a>                         <span class="at">poolsizes =</span> psizes_A,</span>
+<span id="cb4-9"><a href="filtrage-des-données-brutes.html#cb4-9" tabindex="-1"></a>                         <span class="at">poolnames =</span> pnames,</span>
+<span id="cb4-10"><a href="filtrage-des-données-brutes.html#cb4-10" tabindex="-1"></a>                         <span class="at">min.cov.per.pool =</span> <span class="dv">4</span>,</span>
+<span id="cb4-11"><a href="filtrage-des-données-brutes.html#cb4-11" tabindex="-1"></a>                         <span class="at">max.cov.per.pool =</span> <span class="fl">1e+06</span>,</span>
+<span id="cb4-12"><a href="filtrage-des-données-brutes.html#cb4-12" tabindex="-1"></a>                         <span class="at">min.maf =</span> <span class="fl">0.05</span>,</span>
+<span id="cb4-13"><a href="filtrage-des-données-brutes.html#cb4-13" tabindex="-1"></a>                         <span class="at">remove.indels =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-14"><a href="filtrage-des-données-brutes.html#cb4-14" tabindex="-1"></a>                         <span class="at">nlines.per.readblock =</span> <span class="fl">1e+06</span>)</span></code></pre></div>
+<pre class="bg-output"><code>## Reading Header lines
+## VarScan like format detected for allele count data:
+##  the AD field contains allele depth
+## for the alternate allele and RD field for the reference allele
+## (N.B., positions with more than one alternate allele will be ignored)
+## Parsing allele counts
+## 1e+06  lines processed in 0 h  0 m  18 s : 577119 SNPs found
+## 1810324  lines processed in 0 h  0 m  31 s : 1066980 SNPs found
+## Data consists of 1066980 SNPs for 6 Pools</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb6-1"><a href="filtrage-des-données-brutes.html#cb6-1" tabindex="-1"></a><span class="co">#élimine le 1% supérieur considéré comme trop fortement couvert</span></span>
+<span id="cb6-2"><a href="filtrage-des-données-brutes.html#cb6-2" tabindex="-1"></a><span class="co">#(région très dupliquée, biais de séquençage...)</span></span>
+<span id="cb6-3"><a href="filtrage-des-données-brutes.html#cb6-3" tabindex="-1"></a>pooldata<span class="ot">&lt;-</span><span class="fu">pooldata.subset</span>(pooldata, <span class="at">cov.qthres.per.pool =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.99</span>))</span></code></pre></div>
+<pre class="bg-output"><code>## Data consists of 1041408 SNPs for 6 Pools</code></pre>
+<p>A ce stade cet objet <strong><em>pooldata</em></strong> peut être utilisé pour calculer diverses statistiques utilisées dans les études de génomique des populations, ces outils sont décrits et exemplifiés dans la vignette de <strong><em>poolfstat</em></strong> : (<a href="https://cran.r-project.org/web/packages/poolfstat/vignettes/vignette.pdf" class="uri">https://cran.r-project.org/web/packages/poolfstat/vignettes/vignette.pdf</a>), parmis ceux-ci on trouve l’analyse des Fst entre les populations deux à deux (pairwise) afin de visualiser la proximité génétique entre populations(Chunk <a href="filtrage-des-données-brutes.html#exr:chunk3">3</a>).</p>
+<div class="exercise">
+<p><span id="exr:chunk3" class="exercise"><strong>Chunk 3  </strong></span><span style="color:darkgreen">Pairwise Fst</span></p>
+</div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb8-1"><a href="filtrage-des-données-brutes.html#cb8-1" tabindex="-1"></a><span class="co">#Calcul des pairwise Fst </span></span>
+<span id="cb8-2"><a href="filtrage-des-données-brutes.html#cb8-2" tabindex="-1"></a>PairWise.fst <span class="ot">&lt;-</span> <span class="fu">compute.pairwiseFST</span>(pooldata,</span>
+<span id="cb8-3"><a href="filtrage-des-données-brutes.html#cb8-3" tabindex="-1"></a>                                    <span class="at">method =</span> <span class="st">&quot;Anova&quot;</span>,</span>
+<span id="cb8-4"><a href="filtrage-des-données-brutes.html#cb8-4" tabindex="-1"></a>                                    <span class="at">min.cov.per.pool =</span> <span class="dv">4</span>,</span>
+<span id="cb8-5"><a href="filtrage-des-données-brutes.html#cb8-5" tabindex="-1"></a>                                    <span class="at">max.cov.per.pool =</span> <span class="fl">1e+06</span>,</span>
+<span id="cb8-6"><a href="filtrage-des-données-brutes.html#cb8-6" tabindex="-1"></a>                                    <span class="at">min.maf =</span> <span class="fl">0.05</span>,</span>
+<span id="cb8-7"><a href="filtrage-des-données-brutes.html#cb8-7" tabindex="-1"></a>                                    <span class="at">output.snp.values =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb8-8"><a href="filtrage-des-données-brutes.html#cb8-8" tabindex="-1"></a>                                    <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre class="bg-output"><code>## 
+## Overall Analysis Time: 0 h 0 m 5 s</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r bg-chunk"><code class="sourceCode r"><span id="cb10-1"><a href="filtrage-des-données-brutes.html#cb10-1" tabindex="-1"></a><span class="co">#conversion en matrice de distance</span></span>
+<span id="cb10-2"><a href="filtrage-des-données-brutes.html#cb10-2" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">dist</span>(<span class="fu">t</span>(PairWise.fst<span class="sc">@</span>PairwiseFSTmatrix)))</span>
+<span id="cb10-3"><a href="filtrage-des-données-brutes.html#cb10-3" tabindex="-1"></a><span class="co">#heatmap</span></span>
+<span id="cb10-4"><a href="filtrage-des-données-brutes.html#cb10-4" tabindex="-1"></a>cim_color <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">9</span>, <span class="st">&quot;Greens&quot;</span>)))(<span class="dv">9</span>)</span>
+<span id="cb10-5"><a href="filtrage-des-données-brutes.html#cb10-5" tabindex="-1"></a><span class="fu">cim</span>(df, <span class="at">color =</span> cim_color, <span class="at">symkey =</span> <span class="cn">FALSE</span>, <span class="at">margins =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">10</span>),  <span class="at">title =</span> <span class="st">&quot;heatmap des pairwise Fst entre les populations&quot;</span>)</span></code></pre></div>
+<p><img src="BayPass_Fr_files/figure-html/heatmap-PW-fst-1.png" width="768" /></p>
+<p>un exemple d’estimation de la structure génétique des populations déduite des Fst est donné en <a href="An1.html#An1">Annexe 1</a></p>
+
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="obtention-dun-fichier-poolseq.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="conversion-du-pooldata-en-fichiers-dentrées-pour-baypass.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
