@@ -1,20 +1,22 @@
-bookdown::gitbook:
-  css: "style.css"
-  split_bib: false
-  split_by: section
-  includes:
-    in_header: preamble.tex
-  latex_engine: xelatex
-  citation_package: natbib
-  keep_tex: yes
-
-# bookdown::html_document2:
+# bookdown::gitbook:
 #   css: "style.css"
+#   output_dir: docs
+#   split_bib: false
+#   split_by: section
 #   includes:
 #     in_header: preamble.tex
 #   latex_engine: xelatex
 #   citation_package: natbib
 #   keep_tex: yes
+
+bookdown::html_document2:
+  css: "style.css"
+  output_dir: docs
+  includes:
+    in_header: preamble.tex
+  latex_engine: xelatex
+  citation_package: natbib
+  keep_tex: yes
 
 # bookdown::pdf_document2: 
 #   css: style.css
